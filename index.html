@@ -1,0 +1,3458 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Data Quiz - Trắc nghiệm Kiến Thức Big Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --white-color: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark-color);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .quiz-main {
+            flex: 1;
+        }
+
+        .quiz-sidebar {
+            width: 300px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .quiz-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .quiz-header p {
+            color: var(--gray-color);
+            font-size: 1.1rem;
+        }
+
+        .quiz-card {
+            background-color: var(--white-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: slideUp 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--primary-color);
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background-color: rgba(67, 97, 238, 0.1);
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .progress-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .progress-info i {
+            margin-right: 10px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .progress-text span {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            background-color: rgba(76, 201, 240, 0.1);
+            padding: 8px 15px;
+            border-radius: 50px;
+        }
+
+        .timer-container i {
+            color: var(--success-color);
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        #time {
+            font-weight: 700;
+            color: var(--success-color);
+        }
+
+        .question-container {
+            margin-bottom: 25px;
+        }
+
+        .question-number {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-bottom: 5px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+
+        .options-container {
+            margin-bottom: 25px;
+        }
+
+        .option {
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .option:hover {
+            border-color: var(--accent-color);
+            background-color: rgba(72, 149, 239, 0.05);
+        }
+
+        .option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+
+        .option.incorrect {
+            border-color: var(--danger-color);
+            background-color: rgba(247, 37, 133, 0.1);
+        }
+
+        .option-prefix {
+            font-weight: 700;
+            margin-right: 10px;
+            color: var(--primary-color);
+            min-width: 20px;
+        }
+
+        .option-text {
+            flex-grow: 1;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .correct-feedback {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid #28a745;
+            color: #28a745;
+        }
+
+        .incorrect-feedback {
+            background-color: rgba(247, 37, 133, 0.1);
+            border-left: 4px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .controls .btn {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        .results-container {
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-card {
+            background-color: var(--white-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .results-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .results-score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .results-text {
+            font-size: 1.1rem;
+            color: var(--gray-color);
+            margin-bottom: 30px;
+        }
+
+        .results-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .auto-next-timer {
+            display: none;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+
+        .auto-next-progress {
+            width: 100%;
+            height: 4px;
+            background-color: #e9ecef;
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .auto-next-progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 0.1s linear;
+        }
+
+        /* Sidebar styles */
+        .sidebar-card {
+            background-color: var(--white-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-title i {
+            font-size: 1rem;
+        }
+
+        .question-nav {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .question-nav-item {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .question-nav-item:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .question-nav-item.current {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+        }
+
+        .question-nav-item.answered {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .question-nav-item.answered.incorrect {
+            background-color: rgba(247, 37, 133, 0.2);
+            color: var(--danger-color);
+        }
+
+        .sidebar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .quiz-sidebar {
+                width: 100%;
+                position: static;
+                order: -1;
+            }
+            
+            .question-nav {
+                grid-template-columns: repeat(10, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .quiz-header h1 {
+                font-size: 2rem;
+            }
+            
+            .quiz-card {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            .results-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .question-nav {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        /* Confetti effect */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary-color);
+            opacity: 0;
+        }
+
+        /* Badge for correct answer */
+        .correct-badge {
+            position: absolute;
+            right: 15px;
+            color: #28a745;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .option.correct .correct-badge {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-main">
+            <header class="quiz-header">
+                <h1><i class="fas fa-database"></i> Kĩ Nghệ Phần Mềm</h1>
+                <p>Làm bài hoặc cút</p>
+            </header>
+
+            <div class="controls">
+                <button id="shuffle-questions" class="btn btn-outline">
+                    <i class="fas fa-random"></i> Xáo trộn câu hỏi
+                </button>
+                <button id="shuffle-answers" class="btn btn-outline">
+                    <i class="fas fa-random"></i> Xáo trộn đáp án
+                </button>
+                <button id="toggle-auto-next" class="btn btn-outline">
+                    <i class="fas fa-forward"></i> Tự động chuyển câu: <span id="auto-next-status">Bật</span>
+                </button>
+                <button id="review-incorrect" class="btn btn-outline">
+                    <i class="fas fa-redo"></i> Làm lại câu sai
+                </button>
+            </div>
+
+            <div class="quiz-card" id="quiz-container">
+                <div class="quiz-progress">
+                    <div class="progress-info">
+                        <i class="fas fa-clipboard-list"></i>
+                        <div class="progress-text">
+                            Câu <span id="current-question">1</span>/<span id="total-questions">0</span>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <i class="fas fa-star"></i>
+                        <div class="progress-text">
+                            Điểm: <span id="score">0</span>
+                        </div>
+                    </div>
+                    <div class="timer-container">
+                        <i class="fas fa-clock"></i>
+                        <div id="time">00:00</div>
+                    </div>
+                </div>
+
+                <div class="question-container">
+                    <div class="question-number">Câu hỏi số <span id="question-number">1</span></div>
+                    <div class="question-text" id="question-text"></div>
+                </div>
+
+                <div class="options-container" id="options-container"></div>
+
+                <div class="feedback" id="feedback"></div>
+
+                <div class="auto-next-timer" id="auto-next-timer">
+                    Tự động chuyển câu tiếp theo sau: <span id="countdown">3</span> giây
+                    <div class="auto-next-progress">
+                        <div class="auto-next-progress-bar" id="auto-next-progress-bar"></div>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <button id="prev-btn" class="btn btn-outline" disabled>
+                        <i class="fas fa-arrow-left"></i> Câu trước
+                    </button>
+                    <button id="next-btn" class="btn btn-primary">
+                        Câu tiếp theo <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-container" id="results-container">
+                <div class="results-card">
+                    <h2 class="results-title">Chúc mừng bạn đã hoàn thành!</h2>
+                    <div class="results-score" id="final-score">0</div>
+                    <div class="results-text">Bạn đã trả lời đúng <span id="final-correct">0</span> trên tổng số <span id="final-total">0</span> câu hỏi</div>
+                    
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="final-progress-bar"></div>
+                    </div>
+                    
+                    <div class="results-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="final-percentage">0%</div>
+                            <div class="stat-label">Tỷ lệ đúng</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="final-time">00:00</div>
+                            <div class="stat-label">Thời gian</div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-actions">
+                        <button id="restart-btn" class="btn btn-primary">
+                            <i class="fas fa-redo"></i> Làm lại bài kiểm tra
+                        </button>
+                        <button id="review-incorrect-final" class="btn btn-outline">
+                            <i class="fas fa-redo"></i> Làm lại câu sai
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-sidebar">
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">
+                    <span><i class="fas fa-list-ol"></i> Danh sách câu hỏi</span>
+                    <span id="answered-count">0/0</span>
+                </h3>
+                <div class="question-nav" id="question-nav"></div>
+                <div class="sidebar-actions">
+                    <button id="jump-to-first" class="btn btn-outline">
+                        <i class="fas fa-angle-double-left"></i> Đầu tiên
+                    </button>
+                    <button id="jump-to-last" class="btn btn-outline">
+                        <i class="fas fa-angle-double-right"></i> Cuối cùng
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">
+                    <i class="fas fa-chart-pie"></i> Thống kê
+                </h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="sidebar-progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="results-stats" style="justify-content: space-between;">
+                    <div class="stat-item">
+                        <div class="stat-value" id="correct-count">0</div>
+                        <div class="stat-label">Đúng</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="incorrect-count">0</div>
+                        <div class="stat-label">Sai</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="unanswered-count">0</div>
+                        <div class="stat-label">Chưa làm</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data from the Word document
+const quizData = 
+           [
+    {
+        "question": "Phần mềm là gì?",
+        "options": [
+            "A. Chương trình máy tính, các cấu trúc dữ liệu và tài liệu liên quan.",
+            "B. Chương trình phần mềm được phát triển để bán cho một phạm vi các khách hàng khác nhau.",
+            "C. Hệ thống chương trình được phát triển cho một tập thể hoặc cá nhân.",
+            "D. Chương trình phần mềm được viết bằng một hoặc nhiều ngôn ngữ lập trình theo một trật tự xác định."
+        ],
+        "answer": "A. Chương trình máy tính, các cấu trúc dữ liệu và tài liệu liên quan."
+    },
+    {
+        "question": "Có thể định nghĩa kỹ nghệ (Engineering) là?",
+        "options": [
+            "A. Tập hợp các công nghệ được bố trí theo một quy trình xác định.",
+            "B. Là một cách thức tiến hành một công việc để tạo ra một sản phẩm của ngành nào đó.",
+            "C. Là việc sử dụng phối hợp các công nghệ cần thiết để sản xuất ra các sản phẩm của một ngành nào đó.",
+            "D. Dùng các công cụ để tạo ra một sản phẩm nhất định."
+        ],
+        "answer": "C. Là việc sử dụng phối hợp các công nghệ cần thiết để sản xuất ra các sản phẩm của một ngành nào đó."
+    },
+    {
+        "question": "Một phần mềm được gọi là tốt nếu thỏa mãn tối thiểu các thuộc tính?",
+        "options": [
+            "A. Đáng tin cậy, có hiệu quả, giao diện người sử dụng thích hợp, có thể bảo trì được, giá cả phải chấp nhận được.",
+            "B. Phần mềm thỏa mãn yêu cầu người dùng, có hiệu quả, giao diện người sử dụng thích hợp, có thể bảo trì được, giá cả chấp nhận được.",
+            "C. Đáng tin cậy, có hiệu quả, giao diện người sử dụng thích hợp, có thể bảo trì được, dễ sửa lỗi.",
+            "D. Đáng tin cậy, có hiệu quả, tính bảo mật cao, có thể bảo trì được, dễ sửa lỗi."
+        ],
+        "answer": "A. Đáng tin cậy, có hiệu quả, giao diện người sử dụng thích hợp, có thể bảo trì được, giá cả phải chấp nhận được."
+    },
+    {
+        "question": "Thuộc tính có thể bảo trì được bao gồm các thành phần sau:",
+        "options": [
+            "A. Dễ sửa lỗi, nâng cấp.",
+            "B. Dễ sửa lỗi, có đầy đủ tài liệu để nâng cấp phần mềm.",
+            "C. Có đầy đủ tài liệu và việc thay đổi có thể thực hiện mà không quá tốn kém.",
+            "D. Dễ sửa lỗi, nâng cấp và chuyển giao công nghệ."
+        ],
+        "answer": "C. Có đầy đủ tài liệu và việc thay đổi có thể thực hiện mà không quá tốn kém."
+    },
+    {
+        "question": "Hội thảo khoa học NATO đã thảo luận về khủng hoảng phần mềm đầu tiên và đưa ra thuật ngữ 'Kỹ nghệ phần mềm' vào năm nào?",
+        "options": [
+            "A. 1968",
+            "B. 1962",
+            "C. 1965",
+            "D. 1960"
+        ],
+        "answer": "A. 1968"
+    },
+    {
+        "question": "Định nghĩa về kỹ nghệ phần mềm của Ông Bauer được đưa ra vào năm nào?",
+        "options": [
+            "A. 1971",
+            "B. 1972",
+            "C. 1969",
+            "D. 1970"
+        ],
+        "answer": "C. 1969"
+    },
+    {
+        "question": "Định nghĩa về kỹ nghệ phần mềm của Ông Pressman được đưa ra vào năm nào?",
+        "options": [
+            "A. 1994",
+            "B. 1995",
+            "C. 1990",
+            "D. 1992"
+        ],
+        "answer": "B. 1995"
+    },
+    {
+        "question": "Vòng đời của phần mềm gồm mấy giai đoạn?",
+        "options": [
+            "A. 3",
+            "B. 6",
+            "C. 4",
+            "D. 5"
+        ],
+        "answer": "C. 4"
+    },
+    {
+        "question": "Định nghĩa kỹ nghệ phần mềm (Software Engineering)?",
+        "options": [
+            "A. Kỹ nghệ phần mềm là sự áp dụng có hệ thống các phương pháp vào các khâu phát triển của phần mềm.",
+            "B. Kỹ nghệ phần mềm là sự áp dụng có hệ thống các kiến thức kỹ nghệ vào phần mềm.",
+            "C. Kỹ nghệ phần mềm là sự áp dụng có hệ thống các kiến thức thực tế vào phần mềm.",
+            "D. Kỹ nghệ phần mềm là sự áp dụng các kỹ năng và phương pháp vào phần mềm."
+        ],
+        "answer": "A. Kỹ nghệ phần mềm là sự áp dụng có hệ thống các phương pháp vào các khâu phát triển của phần mềm."
+    },
+    {
+        "question": "Quy trình làm phần mềm:",
+        "options": [
+            "A. Phân tích, thiết kế, tạo mã, lập trình, kiểm định, vận hành, bảo trì.",
+            "B. Đặc tả, phân tích, lập trình, kiểm định, bảo trì.",
+            "C. Đặc tả, phân tích, thiết kế, lập trình, kiểm định, bảo trì.",
+            "D. Đặc tả, thiết kế, tạo mã, lập trình, kiểm định."
+        ],
+        "answer": "C. Đặc tả, phân tích, thiết kế, lập trình, kiểm định, bảo trì."
+    },
+    {
+        "question": "Trong quá trình phát triển phần mềm, giai đoạn nào quan trọng nhất?",
+        "options": [
+            "A. Giai đoạn thiết kế và lập trình.",
+            "B. Giai đoạn đặc tả và thiết kế.",
+            "C. Giai đoạn kiểm định và bảo trì.",
+            "D. Giai đoạn lập trình."
+        ],
+        "answer": "B. Giai đoạn đặc tả và thiết kế."
+    },
+    {
+        "question": "Yêu cầu đối với phần mềm khi phân tích là gì?",
+        "options": [
+            "A. Là các yêu cầu của người dùng bằng ngôn ngữ tự nhiên.",
+            "B. Là các ràng buộc mà hệ thống phải tuân theo.",
+            "C. Là các dịch vụ chức năng mà phần mềm phải cung cấp.",
+            "D. Là các dịch vụ mà hệ thống phải cung cấp, các ràng buộc mà hệ thống phải tuân theo khi vận hành."
+        ],
+        "answer": "D. Là các dịch vụ mà hệ thống phải cung cấp, các ràng buộc mà hệ thống phải tuân theo khi vận hành."
+    },
+    {
+        "question": "Có thể xác định hoàn toàn đặc tả yêu cầu với các hệ phần mềm lớn hay không?",
+        "options": [
+            "A. Có thể nếu khảo sát kỹ hệ thống cũ.",
+            "B. Hoàn toàn có thể vì chúng ta đã biết được những yếu kém của hệ thống cũ, do đó có thể khắc phục được nó.",
+            "C. Tùy trường hợp.",
+            "D. Không thể vì khó dự đoán trước hiệu quả của một hệ thống lên thực tế."
+        ],
+        "answer": "D. Không thể vì khó dự đoán trước hiệu quả của một hệ thống lên thực tế."
+    },
+    {
+        "question": "Giai đoạn đặc tả và thiết kế chiếm khoảng bao nhiêu phần trăm (%) trong quá trình phát triển phần mềm?",
+        "options": [
+            "A. 20%",
+            "B. 45%",
+            "C. 30%",
+            "D. 35%"
+        ],
+        "answer": "B. 45%"
+    },
+    {
+        "question": "Giai đoạn lập trình chiếm khoảng bao nhiêu phần trăm (%) trong quá trình phát triển phần mềm?",
+        "options": [
+            "A. 20%",
+            "B. 40%",
+            "C. 25%",
+            "D. 35%"
+        ],
+        "answer": "A. 20%"
+    },
+    {
+        "question": "Giai đoạn kiểm định và bảo trì chiếm khoảng bao nhiêu phần trăm (%) trong quá trình phát triển phần mềm?",
+        "options": [
+            "A. 35%",
+            "B. 30%",
+            "C. 25%",
+            "D. 40%"
+        ],
+        "answer": "A. 35%"
+    },
+    {
+        "question": "Có mấy đặc trưng của tiến trình?",
+        "options": [
+            "A. 3",
+            "B. 6",
+            "C. 5",
+            "D. 4"
+        ],
+        "answer": "A. 3"
+    },
+    {
+        "question": "Trong quá trình phát triển phần mềm, giai đoạn đặc tả phần mềm có nghĩa là:",
+        "options": [
+            "A. Xây dựng không gian giải pháp cho vấn đề.",
+            "B. Nhận biết vấn đề, bài toán thực tế, các yêu cầu mà người dùng đặt ra.",
+            "C. Thẩm định lại tính đúng đắn của giải pháp theo yêu cầu ban đầu đặt ra.",
+            "D. Xây dựng một hệ thống thực hiện được dựa vào thiết kế."
+        ],
+        "answer": "B. Nhận biết vấn đề, bài toán thực tế, các yêu cầu mà người dùng đặt ra."
+    },
+    {
+        "question": "Trong quá trình phát triển phần mềm, giai đoạn thiết kế phần mềm có nghĩa là:",
+        "options": [
+            "A. Xây dựng một hệ thống thực hiện dựa vào thiết kế.",
+            "B. Thẩm định lại tính đúng đắn của giải pháp theo yêu cầu ban đầu đặt ra.",
+            "C. Xây dựng không gian giải pháp cho vấn đề.",
+            "D. Nhận biết vấn đề, bài toán thực tế, các yêu cầu mà người dùng đặt ra."
+        ],
+        "answer": "C. Xây dựng không gian giải pháp cho vấn đề."
+    },
+    {
+        "question": "Trong quá trình phát triển phần mềm, giai đoạn lập trình phần mềm có nghĩa là:",
+        "options": [
+            "A. Xây dựng không gian giải pháp cho vấn đề.",
+            "B. Thẩm định lại tính đúng đắn của giải pháp theo yêu cầu ban đầu đặt ra.",
+            "C. Xây dựng một hệ thống thực hiện dựa vào thiết kế.",
+            "D. Nhận biết vấn đề, bài toán thực tế, các yêu cầu mà người dùng đặt ra."
+        ],
+        "answer": "C. Xây dựng một hệ thống thực hiện dựa vào thiết kế."
+    },
+    {
+        "question": "Trong quá trình phát triển phần mềm, giai đoạn kiểm định phần mềm có nghĩa là:",
+        "options": [
+            "A. Thẩm định lại tính đúng đắn của giải pháp theo yêu cầu ban đầu đặt ra.",
+            "B. Xây dựng không gian giải pháp cho vấn đề.",
+            "C. Nhận biết vấn đề, bài toán thực tế, các yêu cầu mà người dùng đặt ra.",
+            "D. Xây dựng một hệ thống thực hiện dựa vào thiết kế."
+        ],
+        "answer": "A. Thẩm định lại tính đúng đắn của giải pháp theo yêu cầu ban đầu đặt ra."
+    },
+    {
+        "question": "Trong quá trình phát triển phần mềm, giai đoạn bảo trì phần mềm có nghĩa là:",
+        "options": [
+            "A. Xây dựng không gian giải pháp cho vấn đề.",
+            "B. Thẩm định lại tính đúng đắn của giải pháp theo yêu cầu ban đầu đặt ra.",
+            "C. Nhận biết vấn đề, bài toán thực tế, các yêu cầu mà người dùng đặt ra.",
+            "D. Thay đổi và phát triển hệ thống đang được sử dụng."
+        ],
+        "answer": "D. Thay đổi và phát triển hệ thống đang được sử dụng."
+    },
+    {
+        "question": "Khái niệm vòng đời phần mềm:",
+        "options": [
+            "A. Một vòng đời phần mềm là quá trình phát triển từ khi nhận dự án đến khi phần mềm bị loại bỏ.",
+            "B. Một vòng đời phần mềm là quá trình phát triển từ giai đoạn đặc tả đến kiểm định phần mềm.",
+            "C. Một vòng đời phần mềm là quá trình phát triển từ giai đoạn thiết kế đến bảo trì phần mềm.",
+            "D. Một vòng đời phần mềm là quá trình phát triển theo chu kỳ từ giai đoạn đặc tả đến giai đoạn bảo trì phần mềm."
+        ],
+        "answer": "D. Một vòng đời phần mềm là quá trình phát triển theo chu kỳ từ giai đoạn đặc tả đến giai đoạn bảo trì phần mềm."
+    },
+    {
+        "question": "Trong quá trình phát triển phần mềm, giai đoạn nào có thể lặp lại nhiều lần?",
+        "options": [
+            "A. Đặc tả, thiết kế, kiểm định.",
+            "B. Đặc tả, thiết kế.",
+            "C. Đặc tả, lập trình, bảo trì.",
+            "D. Đặc tả, thiết kế, lập trình, kiểm định, bảo trì."
+        ],
+        "answer": "D. Đặc tả, thiết kế, lập trình, kiểm định, bảo trì."
+    },
+    {
+        "question": "Mô hình thác nước gồm mấy tiến trình?",
+        "options": [
+            "A. 5",
+            "B. 7",
+            "C. 4",
+            "D. 6"
+        ],
+        "answer": "D. 6"
+    },
+    {
+        "question": "Trong các mô hình sau, mô hình nào không phải là mô hình phát triển phần mềm?",
+        "options": [
+            "A. Mô hình làm bản mẫu",
+            "B. Mô hình tuần tự tuyến tính.",
+            "C. Mô hình song song.",
+            "D. Mô hình RAD."
+        ],
+        "answer": "C. Mô hình song song."
+    },
+    {
+        "question": "Trong các mô hình phát triển phần mềm sau, mô hình nào là mô hình thác nước:",
+        "options": [
+            "A. Mô hình xoắn ốc.",
+            "B. Tất cả các phương án là sai.",
+            "C. Mô hình tuần tự, tuyến tính",
+            "D. Mô hình làm bản mẫu"
+        ],
+        "answer": "C. Mô hình tuần tự, tuyến tính"
+    },
+    {
+        "question": "Trong quá trình bàn giao sản phẩm, yêu cầu về 'đào tạo' nghĩa là:",
+        "options": [
+            "A. Công ty phần mềm phải hướng dẫn sử dụng phần mềm cho người sử dụng.",
+            "B. Công ty phần mềm đã phải được đào tạo để sử dụng tốt phần mềm.",
+            "C. Hướng dẫn sử dụng phần mềm cho các nhân viên kỹ thuật.",
+            "D. Tất cả các phương án trên đều sai."
+        ],
+        "answer": "A. Công ty phần mềm phải hướng dẫn sử dụng phần mềm cho người sử dụng."
+    },
+    {
+        "question": "Các mức đặc tả yêu cầu:",
+        "options": [
+            "A. Định ra yêu cầu, đặc tả phần mềm, đặc tả thiết kế.",
+            "B. Định ra yêu cầu, đặc tả yêu cầu, đặc tả thiết kế.",
+            "C. Đặc tả chức năng, đặc tả phần mềm, đặc tả thiết kế.",
+            "D. Định ra yêu cầu, đặc tả yêu cầu, đặc tả chức năng."
+        ],
+        "answer": "B. Định ra yêu cầu, đặc tả yêu cầu, đặc tả thiết kế."
+    },
+    {
+        "question": "Khái niệm 'Đặc tả yêu cầu', nghĩa là:",
+        "options": [
+            "A. Yêu cầu được đặc tả bởi các biểu đồ ngữ cảnh, đồ thị và lược đồ quan hệ.",
+            "B. Yêu cầu được viết bằng ngôn ngữ chuyên ngành để mô tả chi tiết phần mềm.",
+            "C. Yêu cầu được viết bằng ngôn ngữ tự nhiên về các dịch vụ mà hệ thống phải cung cấp.",
+            "D. Các dịch vụ được đặc tả một cách chi tiết, chính xác để có thể dùng làm cơ sở hợp đồng giữa 2 bên."
+        ],
+        "answer": "D. Các dịch vụ được đặc tả một cách chi tiết, chính xác để có thể dùng làm cơ sở hợp đồng giữa 2 bên."
+    },
+    {
+        "question": "Khái niệm 'Đặc tả thiết kế', nghĩa là?",
+        "options": [
+            "A. Yêu cầu được viết bằng ngôn ngữ chuyên ngành để mô tả chi tiết phần mềm.",
+            "B. Các dịch vụ được đặc tả một cách chi tiết, chính xác để có thể dùng làm cơ sở hợp đồng giữa hai bên.",
+            "C. Yêu cầu được đặc tả bởi các biểu đồ ngữ cảnh, đồ thị và lược đồ quan hệ.",
+            "D. Yêu cầu được viết bằng ngôn ngữ tự nhiên về các dịch vụ mà hệ thống phải cung cấp."
+        ],
+        "answer": "A. Yêu cầu được viết bằng ngôn ngữ chuyên ngành để mô tả chi tiết phần mềm."
+    },
+    {
+        "question": "Xác định yêu cầu chức năng, nghĩa là?",
+        "options": [
+            "A. Đặc tả các yêu cầu của người dùng.",
+            "B. Đặc tả trìu tượng các dịch vụ mà hệ thống phải cung cấp.",
+            "C. Đặc tả trìu tượng các ràng buộc mà hệ thống phải tuân theo.",
+            "D. Đặc tả trìu tượng các nhu cầu của người dùng mà hệ thống phải cung cấp."
+        ],
+        "answer": "B. Đặc tả trìu tượng các dịch vụ mà hệ thống phải cung cấp."
+    },
+    {
+        "question": "Xác định yêu cầu phi chức năng, nghĩa là?",
+        "options": [
+            "A. Đặc tả trìu tượng các ràng buộc mà hệ thống phải tuân theo.",
+            "B. Đặc tả các yêu cầu của người dùng.",
+            "C. Đặc tả trìu tượng các nhu cầu của người dùng mà hệ thống phải cung cấp.",
+            "D. Đặc tả trìu tượng các dịch vụ mà hệ thống phải cung cấp."
+        ],
+        "answer": "A. Đặc tả trìu tượng các ràng buộc mà hệ thống phải tuân theo."
+    },
+    {
+        "question": "Hệ thống phần mềm phải tuân thủ các ràng buộc về: thời gian, tốc độ xử lý:",
+        "options": [
+            "A. Chức năng và phi chức năng.",
+            "B. Phi chức năng.",
+            "C. Hệ thống phần cứng.",
+            "D. Chức năng."
+        ],
+        "answer": "B. Phi chức năng."
+    },
+    {
+        "question": "Nếu phần mềm thỏa mãn yêu cầu các chức năng không gây mâu thuẫn, có ý nghĩa phần mềm đã đáp ứng được nguyên tắc:",
+        "options": [
+            "A. Hợp lý.",
+            "B. Không mâu thuẫn.",
+            "C. Tráng kiện.",
+            "D. Đầy đủ."
+        ],
+        "answer": "C. Tráng kiện."
+    },
+    {
+        "question": "Trong yêu cầu phi chức năng, phát biểu 'Yêu cầu về hệ thống được phát triển như tốc độ, bộ nhớ, độ tin cậy, tính di chuyển được, tính dùng lại được', là:",
+        "options": [
+            "A. Các yêu cầu ngoại lai.",
+            "B. Các yêu cầu về sản phẩm.",
+            "C. Yêu cầu về quá trình phát triển phần mềm.",
+            "D. Yêu cầu về phương pháp lập trình."
+        ],
+        "answer": "B. Các yêu cầu về sản phẩm."
+    },
+    {
+        "question": "Trong yêu cầu phi chức năng, phát biểu 'Yêu cầu về các chuẩn phải tuân theo, các yêu cầu về ngôn ngữ lập trình, phương pháp thiết kế, yêu cầu về phân phát', là:",
+        "options": [
+            "A. Yêu cầu phát triển về quá trình phần mềm.",
+            "B. Các yêu cầu ngoại lai.",
+            "C. Các yêu cầu về sản phẩm.",
+            "D. Yêu cầu về phương pháp thiết kế và lập trình."
+        ],
+        "answer": "A. Yêu cầu phát triển về quá trình phần mềm."
+    },
+    {
+        "question": "Lý do khiến người phát triển phần mềm phải tạo nguyên mẫu:",
+        "options": [
+            "A. Tất cả đều đúng.",
+            "B. Tạo nguyên mẫu làm cơ sở cho việc viết đặc tả cho sản phẩm.",
+            "C. Tạo nguyên mẫu giúp hạ thấp chi phí sửa lỗi.",
+            "D. Tạo nguyên mẫu dùng làm bản test cho phần mềm sau này."
+        ],
+        "answer": "A. Tất cả đều đúng."
+    },
+    {
+        "question": "Thẩm định là công việc chỉ thực hiện sau:",
+        "options": [
+            "A. Các giai đoạn phát triển phần mềm như: đặc tả, thiết kế, lập trình.",
+            "B. Tất cả các giai đoạn trên.",
+            "C. Giai đoạn đặc tả.",
+            "D. Giai đoạn thiết kế và lập trình."
+        ],
+        "answer": "B. Tất cả các giai đoạn trên."
+    },
+    {
+        "question": "Chức năng nghiệp vụ là:",
+        "options": [
+            "A. Công việc mà tổ chức cần thực hiện trong hoạt động của nó.",
+            "B. Quy trình sản xuất ra một sản phẩm.",
+            "C. Tất cả đều đúng.",
+            "D. Quá trình thực hiện một công việc nào đó."
+        ],
+        "answer": "A. Công việc mà tổ chức cần thực hiện trong hoạt động của nó."
+    },
+    {
+        "question": "Mục tiêu của quá trình phân tích hệ thống về chức năng là:",
+        "options": [
+            "A. Xây dựng mô hình dữ liệu quan hệ nhằm làm rõ hệ thống lưu trữ dữ liệu gì và mối quan hệ giữa chúng.",
+            "B. Tất cả đều đúng.",
+            "C. Xây dựng mô hình thực thể liên kết của hệ thống.",
+            "D. Xây dựng mô hình chức năng của hệ thống nhằm trả lời câu hỏi hệ thống làm những gì?"
+        ],
+        "answer": "D. Xây dựng mô hình chức năng của hệ thống nhằm trả lời câu hỏi hệ thống làm những gì?"
+    },
+    {
+        "question": "Trong thiết kế phần mềm, giai đoạn đặc tả trìu tượng là:",
+        "options": [
+            "A. Đối với các hệ con, đặc tả các dịch vụ mà nó phải cung cấp và các ràng buộc mà nó phải tuân theo.",
+            "B. Các kiến trúc dữ liệu được dùng trong việc thực hiện hệ thống được thiết kế chi tiết và đặc tả.",
+            "C. Các dịch vụ cung cấp bởi một hệ con được phân chia qua các thành phần của hệ con đó.",
+            "D. Các hệ con tạo nên hệ tổng thể và các quan hệ của chúng là được rõ ràng và ghi thành tài liệu."
+        ],
+        "answer": "A. Đối với các hệ con, đặc tả các dịch vụ mà nó phải cung cấp và các ràng buộc mà nó phải tuân theo."
+    },
+    {
+        "question": "Trong thiết kế phần mềm, giai đoạn thiết kế cấu trúc dữ liệu là:",
+        "options": [
+            "A. Các hệ con tạo nên hệ tổng thể và các quan hệ của chúng là được rõ ràng và ghi thành tài liệu.",
+            "B. Đối với các hệ con, đặc tả các dịch vụ mà nó phải cung cấp và các ràng buộc mà nó phải tuân theo.",
+            "C. Các dịch vụ cung cấp bởi một hệ con được phân chia qua các thành phần của hệ con đó.",
+            "D. Các cấu trúc dữ liệu được dùng trong việc thực hiện hệ thống được thiết kế chi tiết và được đặc tả."
+        ],
+        "answer": "D. Các cấu trúc dữ liệu được dùng trong việc thực hiện hệ thống được thiết kế chi tiết và được đặc tả."
+    },
+    {
+        "question": "Trong thiết kế phần mềm, giai đoạn thiết kế giao diện có nội dung là:",
+        "options": [
+            "A. Các cấu trúc dữ liệu được dùng trong việc thực hiện hệ thống được thiết kế chi tiết và được đặc tả.",
+            "B. Các hệ con tạo nên hệ tổng thể và các quan hệ của chúng là được rõ ràng và ghi thành tài liệu.",
+            "C. Các dịch vụ cung cấp bởi một hệ con được phân chia qua các thành phần của hệ con đó.",
+            "D. Đối với các hệ con, đặc tả các dịch vụ mà nó phải cung cấp và các ràng buộc mà nó phải tuân theo."
+        ],
+        "answer": "B. Các hệ con tạo nên hệ tổng thể và các quan hệ của chúng là được rõ ràng và ghi thành tài liệu."
+    },
+    {
+        "question": "Trong thiết kế phần mềm, giai đoạn thiết kế các thành phần có nội dung là:",
+        "options": [
+            "A. Đối với các hệ con, đặc tả các dịch vụ mà nó phải cung cấp và các ràng buộc mà nó phải tuân theo.",
+            "B. Các dịch vụ cung cấp bởi một hệ con được phân chia qua các thành phần của hệ con đó.",
+            "C. Các cấu trúc dữ liệu được dùng trong việc thực hiện hệ thống được thiết kế chi tiết và được đặc tả.",
+            "D. Các hệ con tạo nên hệ tổng thể và các quan hệ của chúng là được rõ ràng và ghi thành tài liệu."
+        ],
+        "answer": "B. Các dịch vụ cung cấp bởi một hệ con được phân chia qua các thành phần của hệ con đó."
+    },
+    {
+        "question": "Thiết kế về dữ liệu là:",
+        "options": [
+            "A. Chi tiết hóa các hình thức giao tiếp như giao tiếp giữa người và máy thông qua các mẫu màn hình.",
+            "B. Chuyển mô hình dữ liệu đã phân tích thành cấu trúc dữ liệu cần thiết cho việc xây dựng và cài đặt hệ thống.",
+            "C. Xác định các môđun, thể hiện các chức năng nhiệm vụ của thành phần trong hệ thống.",
+            "D. Xác định rõ các thành phần cùng nhiệm vụ, chức năng và phương thức xử lý thông tin của chúng."
+        ],
+        "answer": "B. Chuyển mô hình dữ liệu đã phân tích thành cấu trúc dữ liệu cần thiết cho việc xây dựng và cài đặt hệ thống."
+    },
+    {
+        "question": "Trong các đặc tính sau, đặc tính nào không phải là đặc tính của thông tin?",
+        "options": [
+            "A. Tính an toàn",
+            "B. Tính sai lệch",
+            "C. Tính thích hợp và dễ hiệu",
+            "D. Tính kịp thời"
+        ],
+        "answer": "B. Tính sai lệch"
+    },
+    {
+        "question": "Trong các phát biểu sau, phát biểu nào đúng:",
+        "options": [
+            "A. Thiết kế hướng đối tượng chỉ dùng cho lập trình hướng đối tượng.",
+            "B. Thiết kế hướng đối tượng có thể dùng cho cả lập trình hướng đối tượng và lập trình hướng chức năng.",
+            "C. Thiết kế hướng đối tượng có những điểm giống lập trình hướng đối tượng.",
+            "D. Thiết kế hướng đối tượng là lập trình hướng đối tượng."
+        ],
+        "answer": "B. Thiết kế hướng đối tượng có thể dùng cho cả lập trình hướng đối tượng và lập trình hướng chức năng."
+    },
+    {
+        "question": "Một số tiêu chí đánh giá về chất lượng thiết kế?",
+        "options": [
+            "A. Sự kết dính, sự ghép nối, sự hiểu được, tính thích nghi.",
+            "B. Sự kết dính, tính đầy đủ, sự ghép nối, sự hiểu được, tính phổ dụng.",
+            "C. Sự ghép nối, sự hiểu được, tính thích nghi, tính đầy đủ.",
+            "D. Sự kết dính, sự ghép nối, sự hiểu được, tính phổ dụng, tính thích nghi."
+        ],
+        "answer": "A. Sự kết dính, sự ghép nối, sự hiểu được, tính thích nghi."
+    },
+    {
+        "question": "Đặc trưng của phần mềm?",
+        "options": [
+            "A. Không thoái hóa theo thời gian.",
+            "B. Không mòn cũ, thoái hóa theo thời gian.",
+            "C. Đơn giản, dễ hiểu, vô hình.",
+            "D. Được lắp ráp từ mẫu có sẵn."
+        ],
+        "answer": "B. Không mòn cũ, thoái hóa theo thời gian."
+    },
+    {
+        "question": "Tiêu chí 'tính hiệu quả' trong chất lượng phần mềm là gì?",
+        "options": [
+            "A. Có cơ chế bảo mật chống thâm nhập bất hợp pháp, sao chép trộm.",
+            "B. Tất cả các phương án đều đúng.",
+            "C. Hoạt động tốt trong những điều kiện sử dụng khác nhau.",
+            "D. Sử dụng hiệu quả các nguồn tài nguyên, kinh tế."
+        ],
+        "answer": "D. Sử dụng hiệu quả các nguồn tài nguyên, kinh tế."
+    },
+    {
+        "question": "Dễ xác định và sửa lỗi, dễ tạo phiên bản mới thuộc tiêu chí gì trong chất lượng phần mềm?",
+        "options": [
+            "A. Tính tái sử dụng.",
+            "B. Tính dễ bảo trì.",
+            "C. Tính bền vững.",
+            "D. Tính dễ kiểm tra."
+        ],
+        "answer": "B. Tính dễ bảo trì."
+    },
+    {
+        "question": "Chỉ ra đặc trưng của dự án phần mềm?",
+        "options": [
+            "A. Không mòn cũ, nhưng thoái hóa theo thời gian.",
+            "B. Nhiều biến động theo tính chất sản phẩm và môi trường phát triển.",
+            "C. Tiến trình làm phần mềm luôn thay đổi.",
+            "D. Phức tạp, khó hiểu, vô hình."
+        ],
+        "answer": "B. Nhiều biến động theo tính chất sản phẩm và môi trường phát triển."
+    },
+    {
+        "question": "Chỉ ra các nhiệm vụ trong quản lý dự án?",
+        "options": [
+            "A. Giám sát, lập kế hoạch, tổ chức, lập lịch, quản lý rủi ro.",
+            "B. Kiểm soát, chỉ đạo, lập kế hoạch, tổ chức, tạo động lực.",
+            "C. Kiểm soát, lập kế hoạch, tổ chức, lập lịch, tạo động lực.",
+            "D. Giám sát, chỉ đạo, lập kế hoạch, tổ chức, quản lý rủi ro."
+        ],
+        "answer": "B. Kiểm soát, chỉ đạo, lập kế hoạch, tổ chức, tạo động lực."
+    },
+    {
+        "question": "Chỉ ra điều mà người quản lý dự án cần biết?",
+        "options": [
+            "A. Hiểu rõ chủ trương, ý đồ của chủ đầu tư, đồng thời hiểu cặn kẽ mọi khía cạnh của dự án.",
+            "B. Chu kỳ sống của dự án, các tiến trình của dự án và vai trò của các tiến trình này trong chu kỳ sống của dự án.",
+            "C. Có trình độ học vấn, kinh nghiệm trong lĩnh vực quản lý, có kỹ năng lãnh đạo và làm việc nhóm.",
+            "D. Có kỹ năng, kinh nghiệm trong mọi vấn đề của dự án để mang lại thành công cho dự án."
+        ],
+        "answer": "B. Chu kỳ sống của dự án, các tiến trình của dự án và vai trò của các tiến trình này trong chu kỳ sống của dự án."
+    },
+    {
+        "question": "Hoạt động xác định dự án trong quản lý dự án được thể hiện qua?",
+        "options": [
+            "A. Lập kế hoạch.",
+            "B. Lập tài liệu.",
+            "C. Bản đề xuất dự án.",
+            "D. Lập lịch."
+        ],
+        "answer": "C. Bản đề xuất dự án."
+    },
+    {
+        "question": "Chỉ ra các hoạt động trong quản lý rủi ro?",
+        "options": [
+            "A. Xác định rủi ro, phân tích rủi ro, lập kế hoạch rủi ro, giám sát rủi ro, xử lý các rủi ro.",
+            "B. Phân loại rủi ro, đánh giá rủi ro, lập kế hoạch rủi ro, xử lý rủi ro, giám sát rủi ro.",
+            "C. Xác định rủi ro, phân tích rủi ro, lập kế hoạch rủi ro, xử lý các rủi ro.",
+            "D. Phân loại rủi ro, đánh giá rủi ro, xử lý rủi ro, giám sát rủi ro."
+        ],
+        "answer": "A. Xác định rủi ro, phân tích rủi ro, lập kế hoạch rủi ro, giám sát rủi ro, xử lý các rủi ro."
+    },
+    {
+        "question": "Chỉ ra các giai đoạn của tiến trình phần mềm?",
+        "options": [
+            "A. Đặc tả yêu cầu, thiết kế, lập trình, kiểm thử, bảo trì.",
+            "B. Đặc tả yêu cầu, thiết kế, tạo mã, lập trình, kiểm thử.",
+            "C. Phân tích, thiết kế, lập trình, kiểm thử, vận hành, bảo trì.",
+            "D. Đặc tả yêu cầu, phân tích, lập trình, kiểm thử, bảo trì."
+        ],
+        "answer": "A. Đặc tả yêu cầu, thiết kế, lập trình, kiểm thử, bảo trì."
+    },
+    {
+        "question": "Giai đoạn đặc tả yêu cầu và thiết kế chiếm khoảng bao nhiêu phần trăm (%) trong quá trình phát triển phần mềm?",
+        "options": [
+            "A. 30%",
+            "B. 45%",
+            "C. 20%",
+            "D. 35%"
+        ],
+        "answer": "B. 45%"
+    },
+    {
+        "question": "Trong các mô hình tiến trình phần mềm sau, mô hình nào chính là mô hình thác nước?",
+        "options": [
+            "A. Mô hình tuần tự tuyến tính.",
+            "B. Mô hình RAD.",
+            "C. Mô hình bản mẫu.",
+            "D. Mô hình xoắn ốc."
+        ],
+        "answer": "A. Mô hình tuần tự tuyến tính."
+    },
+    {
+        "question": "Ưu điểm của mô hình thác nước?",
+        "options": [
+            "A. Dễ phân công công việc, phân bố chi phí, giám sát công việc.",
+            "B. Khách hàng chỉ được tham gia vào dự án ở giai đoạn phân tích yêu cầu.",
+            "C. Mất rất nhiều công sức để đáp ứng sự thay đổi của khách hàng, phá vỡ cấu trúc của phần mềm.",
+            "D. Mô hình thác nước được sử dụng khi đội dự án có kinh nghiệm."
+        ],
+        "answer": "A. Dễ phân công công việc, phân bố chi phí, giám sát công việc."
+    },
+    {
+        "question": "Mô hình phát triển phần mềm nào được thực hiện theo quy trình sau: Thiết kế nhanh để đưa ra một bản mẫu với những yêu cầu cơ bản. Người dùng đánh giá và bổ sung để làm mịn các yêu cầu và tiếp tục quá trình xây dựng, điều chỉnh bản mẫu để đạt được phần mềm đúng yêu cầu của khách hàng?",
+        "options": [
+            "A. Mô hình tăng dần.",
+            "B. Mô hình thác nước.",
+            "C. Mô hình xoắn ốc.",
+            "D. Mô hình bản mẫu."
+        ],
+        "answer": "D. Mô hình bản mẫu."
+    },
+    {
+        "question": "Nhược điểm của mô hình bản mẫu?",
+        "options": [
+            "A. Mất rất nhiều công sức để đáp ứng sự thay đổi của khách hàng.",
+            "B. Khách hàng chỉ được tham gia vào dự án ở giai đoạn phân tích yêu cầu.",
+            "C. Thiếu sự phân tích, đánh giá một cách cẩn thận tất cả các khía cạnh của hệ thống cuối.",
+            "D. Mô hình chỉ được sử dụng khi đội dự án đã có kinh nghiệm."
+        ],
+        "answer": "C. Thiếu sự phân tích, đánh giá một cách cẩn thận tất cả các khía cạnh của hệ thống cuối."
+    },
+    {
+        "question": "Các pha trong mô hình RAD?",
+        "options": [
+            "A. Mô hình nghiệp vụ, mô hình dữ liệu, mô hình xử lý, tạo sinh ứng dụng, kiểm thử chuyển giao.",
+            "B. Phân tích yêu cầu, thiết kế nhanh, xây dựng bản mẫu, đánh giá.",
+            "C. Phân tích và đặc tả yêu cầu, thiết kế, lập trình, kiểm thử, vận hành và bảo trì.",
+            "D. Trao đổi với khách hàng, lập kế hoạch, phân tích rủi ro, kỹ nghệ, xây dựng và đưa ra sản phẩm, đánh giá khách hàng."
+        ],
+        "answer": "A. Mô hình nghiệp vụ, mô hình dữ liệu, mô hình xử lý, tạo sinh ứng dụng, kiểm thử chuyển giao."
+    },
+    {
+        "question": "Mô hình nào áp dụng quá trình lặp đi lặp lại chuyển giao từng phần cho đến khi sản phẩm hoàn chỉnh được tạo ra?",
+        "options": [
+            "A. Mô hình tăng dần",
+            "B. Mô hình RAD",
+            "C. Mô hình bản mẫu.",
+            "D. Mô hình xoắn ốc"
+        ],
+        "answer": "A. Mô hình tăng dần"
+    },
+    {
+        "question": "Mô hình phát triển phần mềm nào luôn có pha 'phân tích rủi ro' ở từng mức tiến hóa?",
+        "options": [
+            "A. Mô hình bản mẫu",
+            "B. Mô hình xoắn ốc",
+            "C. Mô hình RAD",
+            "D. Mô hình tăng dần"
+        ],
+        "answer": "B. Mô hình xoắn ốc"
+    },
+    {
+        "question": "Chỉ ra thứ tự các hoạt động của tiến trình yêu cầu?1.Phân tích, xác định yêu cầu.2. Nghiên cứu khả thi.3. Thẩm định yêu cầu.4. Đặc tả yêu cầu.",
+        "options": [
+            "A. 2-1-4-3",
+            "B. 1-2-4-3",
+            "C. 2-1-3-4",
+            "D. 1-2-3-4"
+        ],
+        "answer": "A. 2-1-4-3"
+    },
+    {
+        "question": "Yêu cầu người sử dụng là gì?",
+        "options": [
+            "A. Các phát biểu bằng ngôn ngữ tự nhiên và các sơ đồ về dịch vụ và ràng buộc mà hệ thống cung cấp.",
+            "B. Sự phối hợp của nhà phát triển và khách hàng để làm rõ các dịch vụ hệ thống cần cung cấp.",
+            "C. Mô tả chi tiết về phần mềm nhằm phục vụ cho thiết kế, mã hóa.",
+            "D. Tài liệu có cấu trúc mô tả chi tiết các dịch vụ của hệ thống, có thể coi đây là hợp đồng giữa khách hàng và nhà phát triển."
+        ],
+        "answer": "A. Các phát biểu bằng ngôn ngữ tự nhiên và các sơ đồ về dịch vụ và ràng buộc mà hệ thống cung cấp."
+    },
+    {
+        "question": "Trong yêu cầu phi chức năng, yêu cầu về các chuẩn áp dụng, phương pháp thiết kế, ngôn ngữ lập trình… là yêu cầu?",
+        "options": [
+            "A. Yêu cầu về sản phẩm.",
+            "B. Yêu cầu về phương pháp lập trình.",
+            "C. Yêu cầu về tổ chức/tiến trình phát triển.",
+            "D. Yêu cầu từ bên ngoài."
+        ],
+        "answer": "C. Yêu cầu về tổ chức/tiến trình phát triển."
+    },
+    {
+        "question": "Định nghĩa đặc tả là gì?",
+        "options": [
+            "A. Định nghĩa một hệ thống, môđun hay một sản phẩm cần phải làm cái gì.",
+            "B. Mô tả các ràng buộc đặt lên chức năng hay dịch vụ của hệ thống.",
+            "C. Mô tả một hệ thống, môđun hay một sản phẩm cần phải làm như thế nào.",
+            "D. Mô tả các chức năng hay các dịch vụ mà hệ thống phần mềm cần cung cấp."
+        ],
+        "answer": "A. Định nghĩa một hệ thống, môđun hay một sản phẩm cần phải làm cái gì."
+    },
+    {
+        "question": "Ưu điểm của đặc tả hình thức?",
+        "options": [
+            "A. Tăng tính đầy đủ, tính mềm dẻo của hệ thống.",
+            "B. Thấy và hiểu được bản chất bên trong của các yêu cầu.",
+            "C. Dễ hiểu, dễ sử dụng, chi phí thấp.",
+            "D. Tăng tính chắc chắn, dễ hiểu, dễ sử dụng cho hệ thống."
+        ],
+        "answer": "B. Thấy và hiểu được bản chất bên trong của các yêu cầu."
+    },
+    {
+        "question": "Đặc tả hình thức là gì?",
+        "options": [
+            "A. Đặc tả chức năng hay các dịch vụ mà hệ thống phần mềm cần cung cấp.",
+            "B. Đặc tả các ràng buộc đặt lên chức năng hay dịch vụ của hệ thống.",
+            "C. Đặc tả mà ở đó các từ ngữ, cú pháp, ngữ nghĩa được định nghĩa hình thức dựa vào toán học.",
+            "D. Đặc tả sử dụng ngôn ngữ tự nhiên."
+        ],
+        "answer": "C. Đặc tả mà ở đó các từ ngữ, cú pháp, ngữ nghĩa được định nghĩa hình thức dựa vào toán học."
+    },
+    {
+        "question": "Đặc tả sử dụng ngôn ngữ tự nhiên thuộc loại đặc tả gì?",
+        "options": [
+            "A. Đặc tả chức năng",
+            "B. Đặc tả hình thức",
+            "C. Đặc tả phi hình thức",
+            "D. Đặc tả phi chức năng"
+        ],
+        "answer": "C. Đặc tả phi hình thức"
+    },
+    {
+        "question": "Kỹ thuật sử dụng CASE trong thẩm định yêu cầu được dùng để?",
+        "options": [
+            "A. Kiểm tra tính hiện thực của yêu cầu.",
+            "B. Kiểm tra tính kiểm tra được của yêu cầu.",
+            "C. Kiểm tra tính đúng đắn, tính đầy đủ của yêu cầu.",
+            "D. Kiểm tra tính nhất quán của yêu cầu."
+        ],
+        "answer": "D. Kiểm tra tính nhất quán của yêu cầu."
+    },
+    {
+        "question": "Người dùng hệ thống sử dụng tài liệu đặc tả yêu cầu nhằm mục đích?",
+        "options": [
+            "A. Để kiểm tra xác nhận phát triển hệ thống.",
+            "B. Để biết những gì hệ thống cần được phát triển.",
+            "C. Xác định các yêu cầu và kiểm tra xem chúng có đáp ứng đúng nhu cầu của người dùng không.",
+            "D. Đánh giá hệ thống và lên kế hoạch tiến trình phát triển hệ thống."
+        ],
+        "answer": "C. Xác định các yêu cầu và kiểm tra xem chúng có đáp ứng đúng nhu cầu của người dùng không."
+    },
+    {
+        "question": "Tài liệu đặc tả yêu cầu cần đáp ứng được những yêu cầu nào sau đây?1. Đặc tả bên ngoài hành vi hệ thống.2. Dự báo thời gian sống của hệ thống.3. Phạm vi của sản phẩm.4. Đặc tả các ràng buộc về thực hiện.5. Giới thiệu chung về sản phẩm.",
+        "options": [
+            "A. 1-2-4",
+            "B. 2-4-5",
+            "C. 1-4-5",
+            "D. 2-3-5"
+        ],
+        "answer": "A. 1-2-4"
+    },
+    {
+        "question": "Cấu trúc tài liệu đặc tả yêu cầu theo chuẩn IEEE?",
+        "options": [
+            "A. Giới thiệu, mô tả chung, đặc tả yêu cầu hệ thống, mô hình hệ thống, phụ lục, chỉ mục.",
+            "B. Giới thiệu, thuật ngữ, đặc tả yêu cầu hệ thống, mô hình hệ thống, phát triển/thay đổi hệ thống, chỉ mục.",
+            "C. Giới thiệu, mô tả chung, đặc tả yêu cầu, phụ lục, chỉ mục.",
+            "D. Giới thiệu, thuật ngữ, định nghĩa yêu cầu người dùng, đặc tả yêu cầu hệ thống, mô hình hệ thống."
+        ],
+        "answer": "C. Giới thiệu, mô tả chung, đặc tả yêu cầu, phụ lục, chỉ mục."
+    },
+    {
+        "question": "Vai trò của thiết kế phần mềm?",
+        "options": [
+            "A. Khâu kỹ thuật đầu tiên của quá trình phát triển phần mềm.",
+            "B. Là khâu duy nhất quyết định chất lượng phần mềm.",
+            "C. Công cụ giao tiếp giữa nhà phát triển và khách hàng.",
+            "D. Cung cấp đầy đủ thông tin cho việc bảo trì sau này."
+        ],
+        "answer": "D. Cung cấp đầy đủ thông tin cho việc bảo trì sau này."
+    },
+    {
+        "question": "Tiến trình thiết kế tổng quát được thực hiện theo thứ tự?1. Thiết kế phi hình thức.2. Thiết kế chi tiết cuối cùng.3. Thiết kế bán hình thức.4. Phác thảo thiết kế phi hình thức.",
+        "options": [
+            "A. 4-1-3-2",
+            "B. 1-4-2-3",
+            "C. 3-1-2-4",
+            "D. 2-1-4-3"
+        ],
+        "answer": "A. 4-1-3-2"
+    },
+    {
+        "question": "Trong thiết kế phần mềm, thiết kế thành phần là gì?",
+        "options": [
+            "A. Các hệ thống con cấu thành lên hệ thống cần xây dựng, mối quan hệ giữa chúng được xác định và ghi thành tài liệu.",
+            "B. Các dịch vụ cung cấp cho các thành phần khác và các giao diện tương tác với chúng phải được thiết kế.",
+            "C. Các thuật toán được sử dụng để cung cấp các dịch vụ phải được thiết kế chi tiết và chính xác.",
+            "D. Đối với mỗi hệ con, phải có một bản đặc tả các dịch vụ của nó và những ràng buộc khi nó vận hành."
+        ],
+        "answer": "B. Các dịch vụ cung cấp cho các thành phần khác và các giao diện tương tác với chúng phải được thiết kế."
+    },
+    {
+        "question": "Trong thiết kế phần mềm, thiết kế cấu trúc dữ liệu là gì?",
+        "options": [
+            "A. Cấu trúc dữ liệu được sử dụng để cài đặt hệ thống phải được thiết kế một cách chi tiết và cụ thể.",
+            "B. Đối với mỗi hệ con, phải có một bản đặc tả các dịch vụ của nó và những ràng buộc khi nó vận hành.",
+            "C. Các hệ thống con cấu thành lên hệ thống cần xây dựng, mối quan hệ giữa chúng được xác định và ghi thành tài liệu.",
+            "D. Các thuật toán được sử dụng để cung cấp các dịch vụ phải được thiết kế chi tiết và chính xác."
+        ],
+        "answer": "A. Cấu trúc dữ liệu được sử dụng để cài đặt hệ thống phải được thiết kế một cách chi tiết và cụ thể."
+    },
+    {
+        "question": "Trong chất lượng thiết kế phần mềm, tiêu chí 'tính kết dính' là gì?",
+        "options": [
+            "A. Độ đo về tính khớp lại với nhau, các thành phần có quan hệ logic chặt chẽ với nhau.",
+            "B. Thiết kế phải sửa đổi được, tái sử dụng được.",
+            "C. Các phần của thành phần không liên quan với nhau, song lại bị bó vào một thành phần.",
+            "D. Chỉ ra độ ghép nối giữa các đơn vị của chương trình."
+        ],
+        "answer": "A. Độ đo về tính khớp lại với nhau, các thành phần có quan hệ logic chặt chẽ với nhau."
+    },
+    {
+        "question": "Thế nào là thiết kế hướng chức năng?",
+        "options": [
+            "A. Bản thiết kế nhìn hệ phần mềm như một bộ các đối tượng tương tác với nhau, mỗi đối tượng có những thông tin trạng thái riêng.",
+            "B. Bản thiết kế được phân giải thành một bộ các chức năng, mỗi chức năng có trạng thái riêng nhưng chúng chia sẻ với nhau trạng thái hệ thống.",
+            "C. Bản thiết kế được phân giải thành một bộ các chức năng được tác động lẫn nhau, mỗi chức năng được xác định rõ ràng.",
+            "D. Bản thiết kế nhìn hệ phần mềm như một bộ các đối tượng tương tác với nhau, các đối tượng có chung thông tin trạng thái."
+        ],
+        "answer": "C. Bản thiết kế được phân giải thành một bộ các chức năng được tác động lẫn nhau, mỗi chức năng được xác định rõ ràng."
+    },
+    {
+        "question": "Đặc trưng thiết kế hướng chức năng?",
+        "options": [
+            "A. Các chức năng có trạng thái cục bộ nhưng chúng chia sẻ với nhau trạng thái hệ thống.",
+            "B. Thông tin trạng thái bị che dấu, mỗi thành phần có một chức năng xác định.",
+            "C. Vùng dữ liệu dùng chung bị loại bỏ.",
+            "D. Các chức năng có trạng thái cục bộ, không dùng chung trạng thái hệ thống."
+        ],
+        "answer": "A. Các chức năng có trạng thái cục bộ nhưng chúng chia sẻ với nhau trạng thái hệ thống."
+    },
+    {
+        "question": "Ưu điểm thiết kế hướng đối tượng?",
+        "options": [
+            "A. Dễ bảo trì.",
+            "B. Các đối tượng là tập trung.",
+            "C. Khó học và dễ sử dụng.",
+            "D. Thông tin dùng chung rõ ràng."
+        ],
+        "answer": "A. Dễ bảo trì."
+    },
+    {
+        "question": "Nhược điểm của mô hình kiến trúc dữ liệu trung tâm?",
+        "options": [
+            "A. Hiệu quả khi chia sẻ lượng dữ liệu lớn.",
+            "B. Việc chia sẻ, trao đổi dữ liệu là không hiệu quả.",
+            "C. Dư thừa server, khó tìm server hay dịch vụ rỗi.",
+            "D. Khó phân bố dữ liệu hiệu quả."
+        ],
+        "answer": "D. Khó phân bố dữ liệu hiệu quả."
+    },
+    {
+        "question": "Ưu điểm của mô hình kiến trúc khách/chủ?",
+        "options": [
+            "A. Dễ dàng thêm server mới hoặc nâng cấp server hiện tại.",
+            "B. Mỗi hệ thống con quản lý dữ liệu riêng của nó.",
+            "C. Hiệu quả khi chia sẻ lượng dữ liệu lớn.",
+            "D. Mô tả quan hệ giữa các hệ thống con."
+        ],
+        "answer": "C. Hiệu quả khi chia sẻ lượng dữ liệu lớn."
+    },
+    {
+        "question": "Ưu điểm của mô hình kiến trúc lớp?",
+        "options": [
+            "A. Hiệu quả khi chia sẻ lượng dữ liệu lớn.",
+            "B. Khi giao diện một lớp thay đổi, chỉ lớp kế cận bị ảnh hưởng.",
+            "C. Khi giao diện một lớp thay đổi, không ảnh hưởng đến các lớp khác.",
+            "D. Mỗi hệ thống con quản lý dữ liệu riêng của nó."
+        ],
+        "answer": "C. Khi giao diện một lớp thay đổi, không ảnh hưởng đến các lớp khác."
+    },
+    {
+        "question": "Đặc trưng của phương pháp lập trình tuần tự?",
+        "options": [
+            "A. Hạn chế sử dụng các lệnh Goto, sử dụng chương trình con, biến cục bộ.",
+            "B. Hay sử dụng các lệnh Goto và biến cục bộ.",
+            "C. Bao gói và che dấu thông tin, thao tác với dữ liệu qua các giao diện xác định.",
+            "D. Hay sử dụng các lệnh Goto, thiếu khả năng khai báo biến cục bộ."
+        ],
+        "answer": "D. Hay sử dụng các lệnh Goto, thiếu khả năng khai báo biến cục bộ."
+    },
+    {
+        "question": "Trong kiểm thử phần mềm, 'tích hợp các thành phần tạo ra hệ thống hoặc hệ thống con, sau đó kiểm thử hệ thống đã được tích hợp' thuộc loại kiểm thử?",
+        "options": [
+            "A. Kiểm thử chấp nhận.",
+            "B. Kiểm thử hồi quy.",
+            "C. Kiểm thử hệ thống.",
+            "D. Kiểm thử tích hợp."
+        ],
+        "answer": "D. Kiểm thử tích hợp."
+    },
+    {
+        "question": "Nội dung sau thuộc kỹ thuật kiểm thử nào? Kiểm thử giao diện, cấu trúc dữ liệu cục bộ, đường điều khiển, điều kiện logic, phép toán xử lý.",
+        "options": [
+            "A. Kỹ thuật đồ thị nhân quả.",
+            "B. Kiểm thử hộp trắng.",
+            "C. Kiểm thử hộp đen.",
+            "D. Kiểm thử hộp xám."
+        ],
+        "answer": "B. Kiểm thử hộp trắng."
+    },
+    {
+        "question": "Trong kỹ thuật phân hoạch tương đương của kiểm thử hộp đen, nếu điều kiện vào xác định một miền giá trị thì phân hoạch kiểm thử thành?",
+        "options": [
+            "A. 4 lớp tương đương",
+            "B. 3 lớp tương đương",
+            "C. 1 lớp tương đương",
+            "D. 2 lớp tương đương"
+        ],
+        "answer": "B. 3 lớp tương đương"
+    },
+    {
+        "question": "Nội dung nào chính là phương pháp kiểm thử hộp trắng?",
+        "options": [
+            "A. Cho phép kiểm tra cấu trúc bên trong của phần mềm, có thể truy nhập vào mã nguồn chương trình để kiểm tra.",
+            "B. Không quan tâm nhiều đến cấu trúc bên trong của phần mềm mà chỉ quan tâm đến các miền thông tin vào ra.",
+            "C. Chỉ quan tâm đến việc tìm ra các hiện tượng mà phần mềm không xử lý theo đúng đặc tả.",
+            "D. Tạo mô hình hệ thống để mô phỏng ứng xử của phần mềm đối với tác động của môi trường bên ngoài."
+        ],
+        "answer": "A. Cho phép kiểm tra cấu trúc bên trong của phần mềm, có thể truy nhập vào mã nguồn chương trình để kiểm tra."
+    },
+    {
+        "question": "Trong kỹ thuật phân tích giá trị biên, nếu điều kiện vào xác định ngay một số giá trị thì xây dựng trường hợp kiểm thử cho…?",
+        "options": [
+            "A. Các giá trị ngay trên và ngay dưới giá trị cực tiểu.",
+            "B. Các giá trị ngay trên và ngay dưới giá trị cực đại.",
+            "C. Giá trị cực đại, cực tiểu.",
+            "D. Giá trị cực đại, cực tiểu, các giá trị ngay trên hoặc ngay dưới giá trị cực đại hoặc cực tiểu."
+        ],
+        "answer": "D. Giá trị cực đại, cực tiểu, các giá trị ngay trên hoặc ngay dưới giá trị cực đại hoặc cực tiểu."
+    },
+    {
+        "question": "Nội dung sau thuộc chiến lược kiểm thử nào? Bắt đầu xây dựng và kiểm thử với các môđun nguyên tử.",
+        "options": [
+            "A. Kiểm thử đơn vị",
+            "B. Kiểm thử hợp lệ",
+            "C. Tích hợp từ dưới lên",
+            "D. Tích hợp từ trên xuống"
+        ],
+        "answer": "C. Tích hợp từ dưới lên"
+    },
+    {
+        "question": "Nội dung sau thuộc chiến lược kiểm thử nào? Phần mềm được người dùng thực hiện theo sự sắp đặt tự nhiên, trong môi trường được điều khiển. Người phát triển thông qua người sử dụng để báo cáo các sai và các vấn đề sử dụng.",
+        "options": [
+            "A. Kiểm thử Beta",
+            "B. Kiểm thử đơn vị",
+            "C. Kiểm thử Alpha",
+            "D. Kiểm thử tích hợp"
+        ],
+        "answer": "C. Kiểm thử Alpha"
+    },
+    {
+        "question": "Trong quá trình bảo trì phần mềm, quá trình phân tích và chỉnh sửa một hay nhiều lỗi được gọi là bảo trì gì?",
+        "options": [
+            "A. Bảo trì phòng ngừa.",
+            "B. Bảo trì tiếp hợp.",
+            "C. Bảo trì hiệu chỉnh.",
+            "D. Bảo trì hoàn thiện."
+        ],
+        "answer": "C. Bảo trì hiệu chỉnh."
+    },
+    {
+        "question": "Thế nào là bảo trì không cấu trúc?",
+        "options": [
+            "A. Bảo trì thay đổi các chức năng đã có, các mở rộng tổng quát, các khả năng mới.",
+            "B. Bảo trì mà phần mềm được phát triển theo đúng trình tự của công nghệ phần mềm.",
+            "C. Bảo trì cải thiện các tính năng bảo trì như độ tin cậy, cung cấp nền tảng tốt hơn cho những mở rộng sau này.",
+            "D. Thành phần có được duy nhất của một cấu hình phần mềm là mã nguồn, hoạt động bảo trì bắt đầu với việc đánh giá chi tiết mã nguồn."
+        ],
+        "answer": "D. Thành phần có được duy nhất của một cấu hình phần mềm là mã nguồn, hoạt động bảo trì bắt đầu với việc đánh giá chi tiết mã nguồn."
+    },
+    {
+        "question": "Cho công thức bảo trì: M = p(Kexp(c-d)), ý nghĩa tham số p là gì?",
+        "options": [
+            "A. Đánh giá độ phức tạp cho việc thiếu thiết kế về cấu trúc và dữ liệu.",
+            "B. Hằng số kinh nghiệm.",
+            "C. Công việc làm.",
+            "D. Đánh giá mức độ hiểu biết về phần mềm."
+        ],
+        "answer": "B. Hằng số kinh nghiệm."
+    },
+    {
+        "question": "Xem xét khả năng tài chính của tổ chức có cho phép thực hiện dự án, kỹ thuật hiện tại có đủ đảm bảo thực hiện giải pháp công nghệ dự định áp dụng,… Đây là nội dung của giai đoạn nào trong pha phân tích và đặc tả yêu cầu phần mềm?",
+        "options": [
+            "A. Đặc tả yêu cầu.",
+            "B. Nghiên cứu khả thi.",
+            "C. Xác định yêu cầu.",
+            "D. Phân tích yêu cầu."
+        ],
+        "answer": "B. Nghiên cứu khả thi."
+    },
+    {
+        "question": "Chỉ ra phát biểu đúng nhất về thiết kế phần mềm?",
+        "options": [
+            "A. Thiết kế phần mềm là quá trình xây dựng các thành phần chức năng của phần mềm và quan hệ giữa chúng.",
+            "B. Thiết kế phần mềm là quá trình xây dựng một hệ thống thực hiện được dựa vào thiết kế.",
+            "C. Thiết kế phần mềm là quá trình chuyển hóa các yêu cầu phần mềm thành một biểu diễn thiết kế.",
+            "D. Thiết kế phần mềm là quá trình xây dựng không gian giải pháp cho vấn đề."
+        ],
+        "answer": "D. Thiết kế phần mềm là quá trình xây dựng không gian giải pháp cho vấn đề."
+    },
+    {
+        "question": "Trong xác định yêu cầu, các yêu cầu được chia thành những loại nào?",
+        "options": [
+            "A. Yêu cầu chức năng, yêu cầu phi chức năng.",
+            "B. Yêu cầu sản phẩm, yêu cầu quá trình.",
+            "C. Xác định yêu cầu, đặc tả yêu cầu.",
+            "D. Yêu cầu sản phẩm, yêu cầu ngoại lai."
+        ],
+        "answer": "A. Yêu cầu chức năng, yêu cầu phi chức năng."
+    },
+    {
+        "question": "Trong chất lượng thiết kế phần mềm, kết dính thời điểm là gì?",
+        "options": [
+            "A. Các phần tử trong mô đun được ghép lại trong một dãy điều khiển.",
+            "B. Trong một mô đun, ra của phần tử này là đầu vào của phần tử khác.",
+            "C. Các công việc không liên quan với nhau, song lại bị bó vào một mô đun.",
+            "D. Tất cả các thành phần cùng hoạt hóa một lúc được bó lại với nhau."
+        ],
+        "answer": "D. Tất cả các thành phần cùng hoạt hóa một lúc được bó lại với nhau."
+    },
+    {
+        "question": "Thế nào là đặc tả phi hình thức?",
+        "options": [
+            "A. Cách đặc tả dựa vào toán học.",
+            "B. Cách đặc tả dùng kí hiệu đồ họa.",
+            "C. Cách đặc tả dùng văn bản và sơ đồ.",
+            "D. Cách đặc tả bằng ngôn ngữ tự nhiên."
+        ],
+        "answer": "D. Cách đặc tả bằng ngôn ngữ tự nhiên."
+    },
+    {
+        "question": "Nhược điểm đặc tả phi hình thức?",
+        "options": [
+            "A. Khó đọc, khó sử dụng.",
+            "B. Ít được dùng để đặc tả.",
+            "C. Chi phí đặc tả cao.",
+            "D. Thiếu tính chính xác."
+        ],
+        "answer": "D. Thiếu tính chính xác."
+    },
+    {
+        "question": "Ưu điểm của đặc tả phi hình thức?",
+        "options": [
+            "A. Tăng tính chính xác.",
+            "B. Dễ kiểm tra yêu cầu.",
+            "C. Dễ đọc, dễ sử dụng.",
+            "D. Chi phí đặc tả cao."
+        ],
+        "answer": "C. Dễ đọc, dễ sử dụng."
+    },
+    {
+        "question": "Thế nào là đặc tả hình thức?",
+        "options": [
+            "A. Cách đặc tả bằng ngôn ngữ tự nhiên.",
+            "B. Cách đặc tả dùng văn bản và sơ đồ.",
+            "C. Cách đặc tả dùng kí hiệu đồ họa.",
+            "D. Cách đặc tả dựa vào toán học."
+        ],
+        "answer": "D. Cách đặc tả dựa vào toán học."
+    },
+    {
+        "question": "Ưu điểm đặc tả hình thức?",
+        "options": [
+            "A. Tăng tính chính xác.",
+            "B. Dễ đọc, dễ hiểu.",
+            "C. Chi phí đặc tả thấp.",
+            "D. Dễ sử dụng, mềm dẻo."
+        ],
+        "answer": "A. Tăng tính chính xác."
+    },
+    {
+        "question": "Nhược điểm đặc tả hình thức?",
+        "options": [
+            "A. Khó đọc, khó sử dụng.",
+            "B. Khó kiểm tra yêu cầu.",
+            "C. Thiếu tính chính xác.",
+            "D. Chi phí đặc tả thấp."
+        ],
+        "answer": "A. Khó đọc, khó sử dụng."
+    },
+    {
+        "question": "Thiết kế chi tiết và đặc tả các cấu trúc dữ liệu được dùng trong việc thực hiện hệ thống. Đây là hoạt động gì trong thiết kế phần mềm?",
+        "options": [
+            "A. Thiết kế cấu trúc dữ liệu.",
+            "B. Đặc tả cấu trúc dữ liệu.",
+            "C. Thiết kế thuật toán.",
+            "D. Đặc tả thuật toán."
+        ],
+        "answer": "A. Thiết kế cấu trúc dữ liệu."
+    },
+    {
+        "question": "Ưu điểm của mô hình kiến trúc khách – phục vụ?",
+        "options": [
+            "A. Khi một hệ con thay đổi ảnh hưởng đến hệ con khác.",
+            "B. Hỗ trợ sự phát triển tăng trưởng của các hệ con.",
+            "C. Hiệu quả khi chia sẻ một số lượng lớn dữ liệu.",
+            "D. Dễ dàng thêm mới hoặc nâng cấp server hiện tại."
+        ],
+        "answer": "D. Dễ dàng thêm mới hoặc nâng cấp server hiện tại."
+    },
+    {
+        "question": "Trong thiết kế phần mềm, thiết kế thành phần là gì?",
+        "options": [
+            "A. Các giao diện của hệ con với các hệ con khác được thiết kế và ghi thành tài liệu.",
+            "B. Các đặc tả cho mỗi hệ con về các dịch vụ mà nó cung cấp cũng như các ràng buộc chúng phải tuân thủ.",
+            "C. Các dịch vụ mà một hệ con cung cấp được phân chia cho các thành phần hợp thành của hệ được thiết kế.",
+            "D. Xác định hệ tổng thể phần mềm bao gồm các hệ con và các quan hệ giữa chúng và ghi thành tài liệu."
+        ],
+        "answer": "C. Các dịch vụ mà một hệ con cung cấp được phân chia cho các thành phần hợp thành của hệ được thiết kế."
+    },
+    {
+        "question": "Kể tên các chiến lược thiết kế phần mềm?",
+        "options": [
+            "A. Thiết kế hướng chức năng và thiết kế hướng đối tượng.",
+            "B. Thiết kế hướng đối tượng và thiết kế giao diện.",
+            "C. Thiết kế kiến trúc và thiết kế giao diện.",
+            "D. Thiết kế hướng chức năng và thiết kế phi chức năng."
+        ],
+        "answer": "A. Thiết kế hướng chức năng và thiết kế hướng đối tượng."
+    },
+    {
+        "question": "Trong chất lượng thiết kế phần mềm, độ đo 'sự ghép nối' là gì?",
+        "options": [
+            "A. Độ ghép nối lại với nhau giữa các phần trong mô đun đó.",
+            "B. Độ ghép nối với nhau giữa các đơn vị hay mô đun của hệ thống.",
+            "C. Các phần tử trong mô đun được ghép lại trong một dãy điều khiển.",
+            "D. Các thành phần cùng thực hiện chức năng tương tự đặt vào một mô đun."
+        ],
+        "answer": "B. Độ ghép nối với nhau giữa các đơn vị hay mô đun của hệ thống."
+    },
+    {
+        "question": "Các bước trong giai đoạn 'phát triển' của tiến trình phần mềm?",
+        "options": [
+            "A. Phân tích hệ thống, lập kế hoạch dự án, phân tích yêu cầu.",
+            "B. Thiết kế phần mềm, mã hóa, kiểm thử phần mềm.",
+            "C. Thiết kế phần mềm, mã hóa, kiểm thử phần mềm, bảo trì.",
+            "D. Phân tích yêu cầu, thiết kế phần mềm, mã hóa, cài đặt."
+        ],
+        "answer": "B. Thiết kế phần mềm, mã hóa, kiểm thử phần mềm."
+    },
+    {
+        "question": "Đặc điểm của giao diện dòng lệnh?",
+        "options": [
+            "A. Giao diện đơn giản, thao tác thực hiện tuần tự.",
+            "B. Sử dụng cửa sổ, menu, icon,…,bàn phím, chuột.",
+            "C. Có nhiều cửa sổ, có thể tương tác song song.",
+            "D. Giao diện đơn giản, có thể tương tác song song."
+        ],
+        "answer": "A. Giao diện đơn giản, thao tác thực hiện tuần tự."
+    },
+    {
+        "question": "Đặc điểm của giao diện đồ họa?",
+        "options": [
+            "A. Giao diện đơn giản, có thể tương tác song song.",
+            "B. Có nhiều cửa sổ, nhập lệnh/dữ liệu từ bàn phím.",
+            "C. Có nhiều cửa sổ, có thể tương tác song song.",
+            "D. Giao diện đơn giản, thao tác thực hiện tuần tự."
+        ],
+        "answer": "C. Có nhiều cửa sổ, có thể tương tác song song."
+    },
+    {
+        "question": "Trong thiết kế kiến trúc, thế nào là mô hình lớp?",
+        "options": [
+            "A. Tổ chức hệ thống thành một tập hợp các lớp cung cấp tập hợp các dịch vụ.",
+            "B. Mô hình mà để vận hành, hệ thống phải được điều khiển làm việc đồng bộ và đúng.",
+            "C. Mọi dữ liệu được lưu trữ tại một cơ sở dữ liệu trung tâm được truy cập bởi các lớp.",
+            "D. Mô hình hệ thống phân tán, biểu diễn phân tán dữ liệu và xử lý trên nhiều máy tính."
+        ],
+        "answer": "A. Tổ chức hệ thống thành một tập hợp các lớp cung cấp tập hợp các dịch vụ."
+    },
+    {
+        "question": "Đặc trưng của phần mềm?",
+        "options": [
+            "A. Hao mòn, được chế tạo theo nghĩa cổ điển.",
+            "B. Không hỏng đi, thoái hóa theo thời gian.",
+            "C. Đơn giản, dễ hiểu, hữu hình.",
+            "D. Được lắp ráp từ mẫu có sẵn."
+        ],
+        "answer": "B. Không hỏng đi, thoái hóa theo thời gian."
+    },
+    {
+        "question": "Yếu tố nào trong kỹ nghệ phần mềm 'cung cấp sự hỗ trợ tự động hay bán tự động cho các phương pháp'?",
+        "options": [
+            "A. Công cụ",
+            "B. Kỹ thuật",
+            "C. Thủ tục",
+            "D. Phương pháp"
+        ],
+        "answer": "A. Công cụ"
+    },
+    {
+        "question": "Tiêu chuẩn 'tính tin cậy' trong đánh giá phần mềm là gì?",
+        "options": [
+            "A. Phần mềm không gây nên các thiệt hại vật lý và kinh tế khi hệ thống thất bại.",
+            "B. Phần mềm có thể dễ dàng sửa chữa và nâng cấp được.",
+            "C. Phần mềm có giao diện người dùng thích hợp, có tư liệu hướng dẫn và các tiện ích trợ giúp đầy đủ.",
+            "D. Phần mềm không được lãng phí các tài nguyên của hệ thống."
+        ],
+        "answer": "A. Phần mềm không gây nên các thiệt hại vật lý và kinh tế khi hệ thống thất bại."
+    },
+    {
+        "question": "Để kiểm tra phần mềm có những hoạt động nào?",
+        "options": [
+            "A. Xác minh và sửa lỗi.",
+            "B. Kiểm thử và tìm lỗi.",
+            "C. Tìm lỗi và gỡ lỗi.",
+            "D. Xác minh và thẩm định."
+        ],
+        "answer": "D. Xác minh và thẩm định."
+    },
+    {
+        "question": "Chỉ ra các phương pháp đặc tả yêu cầu?",
+        "options": [
+            "A. Đặc tả phi hình thức và đặc tả hình thức.",
+            "B. Đặc tả yêu cầu và đặc tả sản phẩm.",
+            "C. Đặc tả yêu cầu và đặc tả phi chức năng.",
+            "D. Đặc tả chức năng và đặc tả phi chức năng."
+        ],
+        "answer": "A. Đặc tả phi hình thức và đặc tả hình thức."
+    },
+    {
+        "question": "Khái niệm phần mềm?",
+        "options": [
+            "A. Chương trình phần mềm được phát triển cho một phạm vi các khách hàng khác nhau, sản xuất phần mềm đại trà.",
+            "B. Được mô tả với ba bộ phận cấu thành là các chương trình máy tính, các cấu trúc dữ liệu và các tài liệu liên quan.",
+            "C. Hệ thống chương trình được phát triển cho một tập thể hoặc cá nhân, sản xuất phần mềm theo đơn đặt hàng.",
+            "D. Chương trình phần mềm được viết bằng một hoặc nhiều ngôn ngữ lập trình nhằm giải quyết một bài toán cụ thể."
+        ],
+        "answer": "B. Được mô tả với ba bộ phận cấu thành là các chương trình máy tính, các cấu trúc dữ liệu và các tài liệu liên quan."
+    },
+    {
+        "question": "Chỉ ra những giai đoạn trong tiến trình phần mềm?",
+        "options": [
+            "A. Đặc tả yêu cầu, thiết kế, lập trình.",
+            "B. Phân tích, thiết kế, lập trình, bảo trì.",
+            "C. Thiết kế, lập trình, vận hành.",
+            "D. Xác định, phát triển, bảo trì."
+        ],
+        "answer": "D. Xác định, phát triển, bảo trì."
+    },
+    {
+        "question": "Tập hợp yêu cầu, thiết kế nhanh, xây dựng bản mẫu, đánh giá của khách hàng, làm mịn yêu cầu, sản phẩm cuối cùng. Đây là các pha của mô hình kỹ nghệ phần mềm nào?",
+        "options": [
+            "A. Mô hình xoắn ốc.",
+            "B. Mô hình thác nước.",
+            "C. Mô hình làm bản mẫu.",
+            "D. Mô hình kỹ thuật thế hệ thứ tư."
+        ],
+        "answer": "C. Mô hình làm bản mẫu."
+    },
+    {
+        "question": "Đặc điểm của mô hình xoắn ốc?",
+        "options": [
+            "A. Có thể kiểm soát rủi ro ở từng mức tiến hóa.",
+            "B. Sử dụng bộ case trong quá trình phát triển.",
+            "C. Tách biệt giữa các pha, tiến hành tuần tự.",
+            "D. Nhanh chóng xác định được yêu cầu."
+        ],
+        "answer": "A. Có thể kiểm soát rủi ro ở từng mức tiến hóa."
+    },
+    {
+        "question": "Phân loại theo phạm vi sử dụng, sản phẩm phần mềm có những loại nào?",
+        "options": [
+            "A. Phần mềm đặt, phần mềm dùng chung.",
+            "B. Phần mềm công cụ, phần mềm tiện ích.",
+            "C. Phần mềm hệ thống, phần mềm ứng dụng.",
+            "D. Phần mềm nhúng, phần mềm tiện ích."
+        ],
+        "answer": "A. Phần mềm đặt, phần mềm dùng chung."
+    },
+    {
+        "question": "Khái niệm kỹ nghệ phần mềm?",
+        "options": [
+            "A. Việc thiết lập và sử dụng các nguyên lý công nghệ đúng đắn để thu được phần mềm một cách kinh tế vừa tin cậy vừa làm việc hiệu quả trên các máy thực.",
+            "B. Được mô tả với ba bộ phận cấu thành: các chương trình máy tính, các cấu trúc dữ liệu và các tài liệu liên quan.",
+            "C. Bao gồm ba yếu tố chính: phương pháp, công cụ, thủ tục giúp con người quản lý, kiểm soát quá trình phát triển, xây dựng phần mềm chất lượng và hiệu quả.",
+            "D. Chương trình phần mềm được viết bằng một hoặc nhiều ngôn ngữ lập trình theo một trật tự xác định."
+        ],
+        "answer": "A. Việc thiết lập và sử dụng các nguyên lý công nghệ đúng đắn để thu được phần mềm một cách kinh tế vừa tin cậy vừa làm việc hiệu quả trên các máy thực."
+    },
+    {
+        "question": "Mục tiêu của hoạt động quản lý rủi ro?",
+        "options": [
+            "A. Đảm bảo phục vụ, trợ giúp tốt nhất mọi hoạt động dự án.",
+            "B. Đảm bảo hạn chế và ngăn ngừa thiệt hại do sự cố xảy ra.",
+            "C. Đảm bảo kiểm soát mọi thay đổi, đồng bộ sản phẩm.",
+            "D. Đảm bảo thu thập, lưu trữ đủ thông tin và cung cấp kịp thời."
+        ],
+        "answer": "B. Đảm bảo hạn chế và ngăn ngừa thiệt hại do sự cố xảy ra."
+    },
+    {
+        "question": "Tên người quản lý, tên nhà tài trợ, tuyên bố dự án bắt đầu và đề nghị những người liên quan hợp tác toàn diện với dự án. Đây là những thông tin cần có của loại tài liệu nào trong quản lý dự án?",
+        "options": [
+            "A. Bản xây dựng dự án.",
+            "B. Bản đề xuất dự án.",
+            "C. Bản ký hợp đồng.",
+            "D. Bản công bố dự án."
+        ],
+        "answer": "D. Bản công bố dự án."
+    },
+    {
+        "question": "Tên người quản lý, tên nhà tài trợ, tuyên bố dự án bắt đầu và đề nghị những người liên quan hợp tác toàn diện với dự án. Đây là những thông tin cần có của loại tài liệu nào trong quản lý dự án?",
+        "options": [
+            "A. Bản xây dựng dự án",
+            "B. Bản đề xuất dự án",
+            "C. Bản ký hợp đồng",
+            "D. Bản công bố dự án"
+        ],
+        "answer": "D. Bản công bố dự án"
+    },
+    {
+        "question": "Có thể phân loại phần mềm theo cách nào?",
+        "options": [
+            "A. Phạm vi sử dụng, miền ứng dụng",
+            "B. Phần mềm thời gian thực, phần mềm nhúng",
+            "C. Phần mềm đặt, phần mềm dựng chung",
+            "D. Phần mềm hệ thống, phần mềm ứng dụng"
+        ],
+        "answer": "A. Phạm vi sử dụng, miền ứng dụng"
+    },
+    {
+        "question": "Chiến lược kiểm thử nào mà việc kiểm thử bắt đầu với mô đun mức cao nhất và tiếp theo là các mô đun thấp hơn một mức?",
+        "options": [
+            "A. Chiến lược kiểm thử dưới lên",
+            "B. Chiến lược kiểm thử song song",
+            "C. Chiến lược kiểm thử gây áp lực",
+            "D. Chiến lược kiểm thử trên xuống"
+        ],
+        "answer": "D. Chiến lược kiểm thử trên xuống"
+    },
+    {
+        "question": "Thế nào là hoạt động bảo trì hiệu chỉnh?",
+        "options": [
+            "A. Thay đổi để cải thiện tính năng bảo trì hay độ tin cậy cho những mở rộng sau",
+            "B. Quá trình phân tích và hiệu chỉnh một hay nhiều lỗi của chương trình",
+            "C. Hoạt động sửa đổi phần mềm để thích ứng những thay đổi của môi trường",
+            "D. Thay đổi những chức năng đã có, các mở rộng được người dùng gửi đến"
+        ],
+        "answer": "B. Quá trình phân tích và hiệu chỉnh một hay nhiều lỗi của chương trình"
+    },
+    {
+        "question": "Trong chất lượng thiết kế phần mềm, kết dính gom góp là gì?",
+        "options": [
+            "A. Tất cả các thành phần cùng hoạt hóa một lúc được bó lại với nhau",
+            "B. Các phần tử trong mô đun được ghép lại trong một dãy điều khiển",
+            "C. Các thành phần cùng thực hiện các chức năng tương tự được đặt vào cùng một mô đun",
+            "D. Các công việc không liên quan với nhau, song lại bị bó vào một mô đun"
+        ],
+        "answer": "D. Các công việc không liên quan với nhau, song lại bị bó vào một mô đun"
+    },
+    {
+        "question": "Vai trò của thiết kế phần mềm?",
+        "options": [
+            "A. Pha duy nhất quyết định chất lượng phần mềm",
+            "B. Công cụ giao tiếp giữa nhà phát triển và khách hàng",
+            "C. Pha đầu tiên của quá trình phát triển phần mềm",
+            "D. Cung cấp đầy đủ thông tin cho việc bảo trì sau này"
+        ],
+        "answer": "D. Cung cấp đầy đủ thông tin cho việc bảo trì sau này"
+    },
+    {
+        "question": "Thứ tự các hoạt động trong tiến trình hình thành yêu cầu?",
+        "options": [
+            "A. Nghiên cứu khả thi, xác định yêu cầu, phân tích yêu cầu, đặc tả yêu cầu",
+            "B. Xác định yêu cầu, nghiên cứu khả thi, đặc tả yêu cầu, phân tích yêu cầu",
+            "C. Xác định yêu cầu, phân tích yêu cầu, đặc tả yêu cầu, nghiên cứu khả thi",
+            "D. Nghiên cứu khả thi, phân tích yêu cầu, đặc tả yêu cầu, xác định yêu cầu"
+        ],
+        "answer": "A. Nghiên cứu khả thi, xác định yêu cầu, phân tích yêu cầu, đặc tả yêu cầu"
+    },
+    {
+        "question": "Trong xác định yêu cầu, các yêu cầu được chia thành hai loại nào?",
+        "options": [
+            "A. Yêu cầu chức năng, yêu cầu quá trình",
+            "B. Yêu cầu phi chức năng, yêu cầu sản phẩm",
+            "C. Yêu cầu sản phẩm, yêu cầu quá trình",
+            "D. Yêu cầu chức năng, yêu cầu phi chức năng"
+        ],
+        "answer": "D. Yêu cầu chức năng, yêu cầu phi chức năng"
+    },
+    {
+        "question": "Yêu cầu chức năng là gì?",
+        "options": [
+            "A. Các ràng buộc mà hệ phần mềm phải tuân thủ",
+            "B. Các yêu cầu về tiêu chuẩn sản phẩm phần mềm",
+            "C. Các dịch vụ mà hệ phần mềm phải cung cấp",
+            "D. Các yêu cầu về quá trình phát triển phần mềm"
+        ],
+        "answer": "C. Các dịch vụ mà hệ phần mềm phải cung cấp"
+    },
+    {
+        "question": "Các đặc tả cho mỗi hệ con về các dịch vụ mà nó cung cấp cũng như các ràng buộc chúng phải tuân thủ. Đây là hoạt động gì trong thiết kế phần mềm?",
+        "options": [
+            "A. Thiết kế kiến trúc",
+            "B. Đặc tả trừu tượng",
+            "C. Thiết kế thành phần",
+            "D. Thiết kế hệ con"
+        ],
+        "answer": "B. Đặc tả trừu tượng"
+    },
+    {
+        "question": "Tài liệu nào trong pha 'phân tích và đặc tả yêu cầu' có thể được dùng làm cơ sở cho việc ký kết hợp đồng giữa người phát triển và khách hàng?",
+        "options": [
+            "A. Đặc tả yêu cầu",
+            "B. Tài liệu yêu cầu",
+            "C. Phân tích yêu cầu",
+            "D. Mô hình hệ thống"
+        ],
+        "answer": "B. Tài liệu yêu cầu"
+    },
+    {
+        "question": "Nhiệm vụ của phân tích và nắm bắt yêu cầu?",
+        "options": [
+            "A. Thiết lập các dịch vụ mà hệ phải cung cấp và các ràng buộc mà hệ phải tuân theo khi hoạt động",
+            "B. Mô tả chính xác hơn về các chức năng của hệ cùng các ràng buộc mà hệ phải tuân theo khi vận hành",
+            "C. Mô tả trừu tượng về các dịch vụ mà hệ cần cung cấp và các ràng buộc mà hệ cần tuân thủ khi vận hành",
+            "D. Phát biểu chính thức về những yêu cầu phần mềm. Nó trình bày những gì mà hệ phần mềm phải làm"
+        ],
+        "answer": "A. Thiết lập các dịch vụ mà hệ phải cung cấp và các ràng buộc mà hệ phải tuân theo khi hoạt động"
+    },
+    {
+        "question": "Khái niệm xác định yêu cầu?",
+        "options": [
+            "A. Phát biểu chính thức về những yêu cầu phần mềm. Nó trình bày những gì mà hệ phần mềm phải làm",
+            "B. Thiết lập các dịch vụ mà hệ phải cung cấp và các ràng buộc mà hệ phải tuân theo khi hoạt động",
+            "C. Mô tả trừu tượng về các dịch vụ mà hệ cần cung cấp và các ràng buộc mà hệ cần tuân thủ khi vận hành",
+            "D. Mô tả chi tiết về các dịch vụ mà hệ cần cung cấp và các ràng buộc mà hệ cần tuân thủ khi vận hành"
+        ],
+        "answer": "C. Mô tả trừu tượng về các dịch vụ mà hệ cần cung cấp và các ràng buộc mà hệ cần tuân thủ khi vận hành"
+    },
+    {
+        "question": "Về nguyên tắc, các yêu cầu trong xác định yêu cầu phải đảm bảo những yếu tố nào?",
+        "options": [
+            "A. Đầy đủ, hiện thực",
+            "B. Chính xác, hiện thực",
+            "C. Đầy đủ, nhất quán",
+            "D. Chính xác, nhất quán"
+        ],
+        "answer": "C. Đầy đủ, nhất quán"
+    },
+    {
+        "question": "Hãy chỉ ra phát biểu đúng nhất về tài liệu đặc tả yêu cầu?",
+        "options": [
+            "A. Tài liệu đặc tả yêu cầu là phát biểu chính thức về những yêu cầu phần mềm của những người phát triển hệ thống. Nó là tài liệu phục vụ cho thiết kế và mã hóa",
+            "B. Tài liệu đặc tả yêu cầu là phát biểu chính thức về những yêu cầu phần mềm của những người phát triển hệ thống. Nó xác định hệ cần phải làm như thế nào",
+            "C. Tài liệu đặc tả yêu cầu là tài liệu mô tả các yêu cầu chức năng, phi chức năng và miền ứng dụng của hệ thống",
+            "D. Tài liệu đặc tả yêu cầu là phát biểu chính thức về những yêu cầu phần mềm của những người phát triển hệ thống. Nó xác định hệ cần phải làm gì"
+        ],
+        "answer": "D. Tài liệu đặc tả yêu cầu là phát biểu chính thức về những yêu cầu phần mềm của những người phát triển hệ thống. Nó xác định hệ cần phải làm gì"
+    },
+    {
+        "question": "Yêu cầu thường được mô tả ở những mức nào?",
+        "options": [
+            "A. Phân tích yêu cầu, xác định yêu cầu",
+            "B. Xác định yêu cầu, phân tích yêu cầu",
+            "C. Yêu cầu chức năng, yêu cầu phi chức năng",
+            "D. Xác định yêu cầu, đặc tả yêu cầu"
+        ],
+        "answer": "D. Xác định yêu cầu, đặc tả yêu cầu"
+    },
+    {
+        "question": "Mức 'đặc tả yêu cầu' là gì?",
+        "options": [
+            "A. Mô tả yêu cầu phi chức năng của phần mềm",
+            "B. Mô tả mức chi tiết về yêu cầu",
+            "C. Mô tả yêu cầu chức năng của phần mềm",
+            "D. Mô tả trừu tượng mức cao của yêu cầu"
+        ],
+        "answer": "B. Mô tả mức chi tiết về yêu cầu"
+    },
+    {
+        "question": "Ưu điểm của mô hình kiến trúc khách – phục vụ?",
+        "options": [
+            "A. Khi một hệ con thay đổi ảnh hưởng đến hệ con khác",
+            "B. Hỗ trợ sự phát triển tăng trưởng của các hệ con",
+            "C. Hiệu quả khi chia sẻ một số lượng lớn dữ liệu",
+            "D. Sử dụng hiệu quả mạng, phân tán dữ liệu dễ dàng"
+        ],
+        "answer": "D. Sử dụng hiệu quả mạng, phân tán dữ liệu dễ dàng"
+    },
+    {
+        "question": "Hiểu phạm vi, thu thập yêu cầu, phân loại yêu cầu, giải quyết xung đột, ưu tiên hóa, thẩm định yêu cầu. Đây là các giai đoạn của tiến trình gì?",
+        "options": [
+            "A. Hình thành yêu cầu",
+            "B. Phân tích yêu cầu",
+            "C. Thu thập yêu cầu",
+            "D. Xác định yêu cầu"
+        ],
+        "answer": "B. Phân tích yêu cầu"
+    },
+    {
+        "question": "Thế nào là bảo trì không cấu trúc?",
+        "options": [
+            "A. Phần mềm có cấu hình duy nhất là mã nguồn, hoạt động bảo trì bắt đầu với việc đánh giá chi tiết mã nguồn",
+            "B. Bảo trì đáp ứng các thay đổi những chức năng đã có và các mở rộng tổng quát được người dùng gửi đến",
+            "C. Phần mềm có cấu hình hoàn thiện, nhiệm vụ bảo trì bắt đầu bằng việc đánh giá các tài liệu thiết kế",
+            "D. Bảo trì cải thiện các tính năng bảo trì như độ tin cậy, cung cấp nền tảng tốt hơn cho những mở rộng sau này"
+        ],
+        "answer": "A. Phần mềm có cấu hình duy nhất là mã nguồn, hoạt động bảo trì bắt đầu với việc đánh giá chi tiết mã nguồn"
+    },
+    {
+        "question": "Sơ đồ dưới đây chỉ ra tiến trình gì?<br><img src='anh2.png' alt='Sơ đồ tiến trình' style='max-width:100%;margin:16px 0;'>",
+        "options": [
+            "A. Phân tích các yêu cầu",
+            "B. Thu thập các yêu cầu",
+            "C. Hình thành các yêu cầu",
+            "D. Xác định các yêu cầu"
+        ],
+        "answer": "C. Hình thành các yêu cầu"
+    },
+    {
+        "question": "Cho công thức bảo trì: M = p(K*exp(c-d)), ý nghĩa tham số p là gì?",
+        "options": [
+            "A. Hằng số kinh nghiệm",
+            "B. Đánh giá mức độ hiểu biết về phần mềm",
+            "C. Công việc làm",
+            "D. Đánh giá độ phức tạp cho việc thiếu thiết kế về cấu trúc và dữ liệu"
+        ],
+        "answer": "A. Hằng số kinh nghiệm"
+    },
+    {
+        "question": "Trong thiết kế phần mềm, thiết kế sơ bộ là gì?",
+        "options": [
+            "A. Tập trung vào việc làm mịn biểu diễn kiến trúc dẫn tới cấu trúc dữ liệu chi tiết và biểu diễn thuật toán",
+            "B. Quá trình định nghĩa mối quan hệ giữa các thành phần cấu trúc chính của phần mềm",
+            "C. Chuyển các mô hình dữ liệu thành các cấu trúc dữ liệu cần thiết cho việc cài đặt phần mềm",
+            "D. Quá trình dịch các yêu cầu thành các kiến trúc dữ liệu và kiến trúc phần mềm"
+        ],
+        "answer": "D. Quá trình dịch các yêu cầu thành các kiến trúc dữ liệu và kiến trúc phần mềm"
+    },
+    {
+        "question": "Chỉ ra phát biểu đúng nhất về lập trình thứ lỗi?",
+        "options": [
+            "A. Lập trình thứ lỗi là cách lập trình ngăn chặn sự xâm nhập của các file lạ, bảo toàn dữ liệu khi hệ thống sụp đổ",
+            "B. Lập trình thứ lỗi là cách lập trình đánh dấu lại các bất thường trong quá trình vận hành phần mềm",
+            "C. Lập trình thứ lỗi là cách lập trình đảm bảo cho hệ thống không bị ảnh hưởng gì ngay cả khi có thành phần sinh lỗi",
+            "D. Lập trình thứ lỗi là cách lập trình đảm bảo cho hệ thống có khả năng dung thứ lỗi khi có thành phần sinh lỗi"
+        ],
+        "answer": "D. Lập trình thứ lỗi là cách lập trình đảm bảo cho hệ thống có khả năng dung thứ lỗi khi có thành phần sinh lỗi"
+    },
+    {
+        "question": "Khái niệm đặc tả yêu cầu?",
+        "options": [
+            "A. Mô tả chi tiết về các dịch vụ mà hệ cần cung cấp và các ràng buộc mà hệ cần tuân thủ khi vận hành",
+            "B. Mô tả trừu tượng về các dịch vụ mà hệ cần cung cấp và các ràng buộc mà hệ cần tuân thủ khi vận hành",
+            "C. Thiết lập các dịch vụ mà hệ phải cung cấp và các ràng buộc mà hệ phải tuân theo khi hoạt động",
+            "D. Phát biểu chính thức về những yêu cầu phần mềm. Nó trình bày những gì mà hệ phần mềm phải làm"
+        ],
+        "answer": "A. Mô tả chi tiết về các dịch vụ mà hệ cần cung cấp và các ràng buộc mà hệ cần tuân thủ khi vận hành"
+    },
+    {
+        "question": "Định nghĩa dự án?",
+        "options": [
+            "A. Một tập hợp các hoạt động có liên quan với nhau được kế hoạch hóa nhằm đạt được các mục tiêu đã định",
+            "B. Một tập hợp các nhiệm vụ, được thực hiện bởi một tập thể, nhằm đạt được một kết quả dự kiến với kinh phí dự kiến",
+            "C. Một tập hồ sơ tài liệu được trình bày chi tiết và có hệ thống các hoạt động, chi phí theo một kế hoạch để đạt được những mục tiêu nhất định",
+            "D. Một nhiệm vụ cần hoàn thành để có được một sản phẩm/dịch vụ duy nhất, trong một thời hạn đã cho với kinh phí dự kiến"
+        ],
+        "answer": "D. Một nhiệm vụ cần hoàn thành để có được một sản phẩm/dịch vụ duy nhất, trong một thời hạn đã cho với kinh phí dự kiến"
+    },
+    {
+        "question": "Ưu điểm của mô hình kiến trúc lớp?",
+        "options": [
+            "A. Hiệu quả khi chia sẻ một số lượng lớn dữ liệu, dễ quản lý",
+            "B. Khi giao diện một lớp thay đổi, chỉ lớp kế cận ảnh hưởng",
+            "C. Sự phát triển tăng trưởng của các lớp tách biệt nên dễ nâng cấp",
+            "D. Sử dụng hiệu quả mạng, phân tán dữ liệu dễ dàng giữa các lớp"
+        ],
+        "answer": "C. Sự phát triển tăng trưởng của các lớp tách biệt nên dễ nâng cấp"
+    },
+    {
+        "question": "Ưu điểm của mô hình kho dữ liệu?",
+        "options": [
+            "A. Hỗ trợ sự phát triển tăng trưởng của các phân hệ",
+            "B. Hiệu quả khi chia sẻ một số lượng lớn dữ liệu",
+            "C. Sử dụng hiệu quả mạng, phân tán dữ liệu dễ dàng",
+            "D. Khi một hệ con thay đổi, chỉ hệ kế cận ảnh hưởng"
+        ],
+        "answer": "B. Hiệu quả khi chia sẻ một số lượng lớn dữ liệu"
+    },
+    {
+        "question": "Bảo trì phần mềm được định nghĩa thông qua mô tả bốn hoạt động nào?",
+        "options": [
+            "A. Bảo trì hiệu chỉnh, bảo trì tiếp hợp, bảo trì hoàn thiện, bảo trì phòng ngừa",
+            "B. Bảo trì vận hành, bảo trì hiệu chỉnh, bảo trì hoàn thiện, bảo trì phòng ngừa",
+            "C. Bảo trì hiệu chỉnh, bảo trì tiếp hợp, bảo trì thiết kế, bảo trì hoàn thiện",
+            "D. Bảo trì hệ thống, bảo trì hiệu chỉnh, bảo trì tiếp hợp, bảo trì hoàn thiện"
+        ],
+        "answer": "A. Bảo trì hiệu chỉnh, bảo trì tiếp hợp, bảo trì hoàn thiện, bảo trì phòng ngừa"
+    },
+    {
+        "question": "Đặc điểm của mô hình thác nước?",
+        "options": [
+            "A. Nhanh chóng xác định được yêu cầu",
+            "B. Tách biệt giữa các pha, tiến hành tuần tự",
+            "C. Có thể kiểm soát rủi ro ở từng mức tiến hóa",
+            "D. Sử dụng bộ công cụ case trong quá trình phát triển"
+        ],
+        "answer": "B. Tách biệt giữa các pha, tiến hành tuần tự"
+    },
+    {
+        "question": "Theo quan điểm của quản lý dự án thì thiết kế phần mềm được chia thành hai giai đoạn nào?",
+        "options": [
+            "A. Thiết kế dữ liệu - thiết kế thuật toán",
+            "B. Thiết kế sơ bộ - thiết kế chi tiết",
+            "C. Thiết kế thành phần - thiết kế giao diện",
+            "D. Thiết kế kiến trúc - thiết kế dữ liệu"
+        ],
+        "answer": "B. Thiết kế sơ bộ - thiết kế chi tiết"
+    },
+    {
+        "question": "Trong chất lượng thiết kế phần mềm, độ đo 'sự kết dính' là gì?",
+        "options": [
+            "A. Độ ghép nối với nhau giữa các đơn vị hay mô đun của hệ thống",
+            "B. Các phần tử trong mô đun được ghép lại trong một dãy điều khiển",
+            "C. Độ đo về tính khớp lại với nhau của các phần trong mô đun đó",
+            "D. Các thành phần cùng thực hiện các chức năng tương tự đặt vào một mô đun"
+        ],
+        "answer": "C. Độ đo về tính khớp lại với nhau của các phần trong mô đun đó"
+    },
+    {
+        "question": "Một số độ đo chất lượng thiết kế phần mềm?",
+        "options": [
+            "A. Sự kết dính, sự đầy đủ, sự hiểu được, sự thích nghi được",
+            "B. Sự đầy đủ, sự hiểu được, sự thích nghi được, sự phổ dụng",
+            "C. Sự kết dính, sự ghép nối, sự hiểu được, sự thích nghi được",
+            "D. Sự kết dính, sự đầy đủ, sự ghép nối, sự phổ dụng"
+        ],
+        "answer": "C. Sự kết dính, sự ghép nối, sự hiểu được, sự thích nghi được"
+    },
+    {
+        "question": "Thế nào là thiết kế hướng chức năng?",
+        "options": [
+            "A. Bản thiết kế được phân giải thành một bộ các đơn thể tác động lẫn nhau, mỗi đơn thể có một chức năng được xác định rõ ràng",
+            "B. Bản thiết kế được phân giải thành một bộ các chức năng tác động lẫn nhau, các chức năng không dùng chung trạng thái hệ thống",
+            "C. Bản thiết kế được phân giải thành một bộ các chức năng tác động lẫn nhau, mỗi chức năng có trạng thái riêng, không dùng chung trạng thái hệ thống",
+            "D. Bản thiết kế được phân giải thành một bộ các chức năng tác động lẫn nhau, các chức năng có trạng thái giống nhau"
+        ],
+        "answer": "C. Bản thiết kế được phân giải thành một bộ các chức năng tác động lẫn nhau, mỗi chức năng có trạng thái riêng, không dùng chung trạng thái hệ thống"
+    },
+    {
+        "question": "Thế nào là thiết kế hướng đối tượng?",
+        "options": [
+            "A. Bản thiết kế được phân giải thành một bộ các chức năng, mỗi chức năng có trạng thái riêng, chúng chia sẻ với nhau trạng thái hệ thống",
+            "B. Bản thiết kế được phân giải thành một bộ các đơn thể tác động lẫn nhau, mỗi đơn thể có một chức năng được xác định rõ ràng",
+            "C. Bản thiết kế nhìn hệ phần mềm như một bộ các đối tượng tương tác với nhau, mỗi đối tượng có những thông tin trạng thái riêng",
+            "D. Bản thiết kế nhìn hệ phần mềm như một bộ các đối tượng tương tác với nhau, các đối tượng có chung thông tin trạng thái"
+        ],
+        "answer": "C. Bản thiết kế nhìn hệ phần mềm như một bộ các đối tượng tương tác với nhau, mỗi đối tượng có những thông tin trạng thái riêng"
+    },
+    {
+        "question": "Đặc trưng thiết kế hướng chức năng?",
+        "options": [
+            "A. Các chức năng có trạng thái cục bộ, chúng chia sẻ với nhau trạng thái hệ thống",
+            "B. Thông tin trạng thái bị che dấu, mỗi thành phần có một chức năng xác định",
+            "C. Các chức năng có trạng thái cục bộ, chúng không dùng chung trạng thái hệ thống",
+            "D. Các chức năng có chung trạng thái, chúng chia sẻ với nhau trạng thái hệ thống"
+        ],
+        "answer": "A. Các chức năng có trạng thái cục bộ, chúng chia sẻ với nhau trạng thái hệ thống"
+    },
+    {
+        "question": "Đặc trưng thiết kế hướng đối tượng?",
+        "options": [
+            "A. Các đối tượng là các thực thể có mối quan hệ chặt chẽ với nhau",
+            "B. Các đối tượng liên lạc với nhau thông qua trạng thái hệ thống",
+            "C. Các đối tượng liên lạc với nhau bằng cách trao đổi thông báo",
+            "D. Các đối tượng không phân tán, chỉ hành động tuần tự"
+        ],
+        "answer": "C. Các đối tượng liên lạc với nhau bằng cách trao đổi thông báo"
+    },
+    {
+        "question": "Nhược điểm của mô hình thác nước?",
+        "options": [
+            "A. Chậm có phiên bản thực hiện được",
+            "B. Mất nhiều công sức đáp ứng sự thay đổi",
+            "C. Kiểm soát rủi ro ở từng mức tiến hóa",
+            "D. Không chuyển tải hết chức năng phần mềm"
+        ],
+        "answer": "B. Mất nhiều công sức đáp ứng sự thay đổi"
+    },
+    {
+        "question": "Nhược điểm chiến lược kiểm thử dưới lên?",
+        "options": [
+            "A. Chậm phát hiện lỗi chương trình",
+            "B. Khó kiểm soát các mức kiểm thử",
+            "C. Đánh giá chương trình không hiệu quả",
+            "D. Chậm có phiên bản thực hiện được"
+        ],
+        "answer": "D. Chậm có phiên bản thực hiện được"
+    },
+    {
+        "question": "Ưu điểm thiết kế hướng đối tượng?",
+        "options": [
+            "A. Tăng tính dễ hiểu của thiết kế, dễ bảo trì",
+            "B. Thông tin trạng thái hệ thống đạt nhỏ nhất",
+            "C. Các đối tượng chia sẻ trạng thái hệ thống",
+            "D. Thông tin dùng chung giữa các đối tượng rõ ràng"
+        ],
+        "answer": "A. Tăng tính dễ hiểu của thiết kế, dễ bảo trì"
+    },
+    {
+        "question": "Nhược điểm thiết kế hướng đối tượng?",
+        "options": [
+            "A. Khó nhận ra các đối tượng của hệ thống",
+            "B. Thông tin dùng chung không rõ ràng",
+            "C. Giảm tính dễ hiểu của bản thiết kế",
+            "D. Các đối tượng không dùng lại được"
+        ],
+        "answer": "A. Khó nhận ra các đối tượng của hệ thống"
+    },
+    {
+        "question": "Nhược điểm của mô hình xoắn ốc?",
+        "options": [
+            "A. Thiếu sự phân tích, đánh giá cẩn thận các khía cạnh của hệ thống cuối",
+            "B. Yêu cầu tri thức chuyên gia đánh giá rủi ro chính xác, năng lực quản lý cao",
+            "C. Khách hàng phải phát biểu mọi yêu cầu một cách tường minh ngay từ đầu",
+            "D. Khó thuyết phục khách hàng cách tiếp cận tiến hóa có thể kiểm soát được"
+        ],
+        "answer": "D. Khó thuyết phục khách hàng cách tiếp cận tiến hóa có thể kiểm soát được"
+    },
+    {
+        "question": "Tiến trình quản lý rủi ro được thực hiện theo thứ tự nào?",
+        "options": [
+            "A. Phân tích rủi ro, xác định rủi ro, kiểm soát rủi ro, lập kế hoạch đáp ứng",
+            "B. Xác định rủi ro, phân tích rủi ro, lập kế hoạch đáp ứng, kiểm soát rủi ro",
+            "C. Kiểm soát rủi ro, lập kế hoạch đáp ứng, phân tích rủi ro, xác định rủi ro",
+            "D. Lập kế hoạch đáp ứng, xác định rủi ro, kiểm soát rủi ro, phân tích rủi ro"
+        ],
+        "answer": "B. Xác định rủi ro, phân tích rủi ro, lập kế hoạch đáp ứng, kiểm soát rủi ro"
+    },
+    {
+        "question": "Trong bảo trì phần mềm, có mấy loại hiệu ứng lề?",
+        "options": [
+            "A. 2",
+            "B. 4",
+            "C. 3",
+            "D. 5"
+        ],
+        "answer": "C. 3"
+    },
+    {
+        "question": "Trong kiểm thử phần mềm, có những loại kiểm thử nào?",
+        "options": [
+            "A. Kiểm thử thống kê, kiểm thử khiếm khuyết",
+            "B. Kiểm thử đơn vị, kiểm thử hệ thống",
+            "C. Kiểm thử mô đun, kiểm thử hệ con",
+            "D. Kiểm thử hệ thống, kiểm thử chấp nhận"
+        ],
+        "answer": "D. Kiểm thử hệ thống, kiểm thử chấp nhận"
+    },
+    {
+        "question": "Thực hiện tất cả các đường dẫn độc lập ít nhất một lần, thực hiện mọi vòng lặp tại các biên và trong phạm vi hoạt động của chúng, thực hiện mọi điều kiện trên các giá trị True/False của chúng,... Đây là nguyên tắc kiểm thử của phương pháp kiểm thử gì?",
+        "options": [
+            "A. Kiểm thử đơn vị",
+            "B. Kiểm thử mô đun",
+            "C. Kiểm thử hộp trắng",
+            "D. Kiểm thử hộp đen"
+        ],
+        "answer": "C. Kiểm thử hộp trắng"
+    },
+    {
+        "question": "Mục đích của chiến lược kiểm thử gây áp lực?",
+        "options": [
+            "A. Kiểm tra hiệu quả hoạt động thuật toán",
+            "B. Sớm có phiên bản đưa vào vận hành",
+            "C. Tìm hiểu giới hạn chịu tải của hệ thống",
+            "D. Phát hiện sớm lỗi thiết và lập trình"
+        ],
+        "answer": "C. Tìm hiểu giới hạn chịu tải của hệ thống"
+    },
+    {
+        "question": "Phát hiện sự thiếu sót chức năng, sai sót về giao diện giữa các mô đun, lỗi khởi tạo, lỗi kết thúc,… Đây là mục đích kiểm thử của phương pháp kiểm thử nào?",
+        "options": [
+            "A. Kiểm thử hộp đen",
+            "B. Kiểm thử hộp trắng",
+            "C. Kiểm thử đơn vị",
+            "D. Kiểm thử mô đun"
+        ],
+        "answer": "A. Kiểm thử hộp đen"
+    },
+    {
+        "question": "Trong phong cách lập trình, việc xây dựng câu lệnh nên tuân theo quy tắc nào?",
+        "options": [
+            "A. Viết nhiều câu lệnh trên một dòng",
+            "B. Các câu lệnh lồng nhau, tụt lề các dòng lệnh",
+            "C. Xây dựng câu lệnh đơn và thẳng hàng",
+            "D. Mỗi câu lệnh nên đơn giản và trực tiếp"
+        ],
+        "answer": "D. Mỗi câu lệnh nên đơn giản và trực tiếp"
+    },
+    {
+        "question": "Sơ đồ dưới đây chỉ ra tiến trình gì?",
+        "options": [
+            "A. Thiết kế giao diện tổng quát",
+            "B. Thiết kế giao diện chi tiết",
+            "C. Thiết kế giao diện làm mẫu",
+            "D. Thiết kế giao diện người dùng"
+        ],
+        "answer": "C. Thiết kế giao diện làm mẫu"
+    },
+    {
+        "question": "Trừu tượng hóa dữ liệu là gì?",
+        "options": [
+            "A. Tập hợp các dữ liệu có tên mô tả cho một đối tượng dữ liệu nào đó",
+            "B. Đặc tả các cấu trúc dữ liệu được dùng trong việc thực hiện hệ thống",
+            "C. Một dãy các lệnh có tên, có chức năng xác định và giới hạn",
+            "D. Đặc tả các thuật toán được dùng cho các dịch vụ của hệ thống"
+        ],
+        "answer": "A. Tập hợp các dữ liệu có tên mô tả cho một đối tượng dữ liệu nào đó"
+    },
+    {
+        "question": "Trừu tượng hóa thủ tục là gì?",
+        "options": [
+            "A. Tập hợp các dữ liệu có tên mô tả cho một đối tượng dữ liệu nào đó",
+            "B. Một dãy các lệnh có tên, có chức năng xác định và giới hạn",
+            "C. Đặc tả các cấu trúc dữ liệu dùng trong việc thực hiện hệ thống",
+            "D. Đặc tả các thuật toán được dùng cho các dịch vụ của hệ thống"
+        ],
+        "answer": "B. Một dãy các lệnh có tên, có chức năng xác định và giới hạn"
+    },
+    {
+        "question": "Mô đun hóa là gì?",
+        "options": [
+            "A. Đặc tả các thuật toán được dùng cho các dịch vụ của hệ thống",
+            "B. Phần mềm được chia thành các thành phần có tên riêng và địa chỉ",
+            "C. Tập hợp các dữ liệu có tên mô tả cho một đối tượng dữ liệu nào đó",
+            "D. Một dãy các lệnh có tên, có chức năng xác định và giới hạn"
+        ],
+        "answer": "B. Phần mềm được chia thành các thành phần có tên riêng và địa chỉ"
+    },
+    {
+        "question": "Trong thiết kế phần mềm, thiết kế chi tiết là gì?",
+        "options": [
+            "A. Việc làm mịn biểu diễn kiến trúc dẫn tới cấu trúc dữ liệu chi tiết và biểu diễn thuật toán",
+            "B. Chuyển các mô hình dữ liệu thành các cấu trúc dữ liệu cần thiết cho việc cài đặt phần mềm",
+            "C. Quá trình định nghĩa mối quan hệ giữa các thành phần cấu trúc chính của phần mềm",
+            "D. Quá trình dịch các yêu cầu thành các kiến trúc dữ liệu và kiến trúc phần mềm"
+        ],
+        "answer": "A. Việc làm mịn biểu diễn kiến trúc dẫn tới cấu trúc dữ liệu chi tiết và biểu diễn thuật toán"
+    },
+    {
+        "question": "Mục đích của loại kiểm thử khiếm khuyết?",
+        "options": [
+            "A. Tìm những phần mà chương trình không tuân theo đặc tả",
+            "B. Kiểm tra sự thi hành và độ tin cậy của chương trình",
+            "C. Kiểm tra sản phẩm thông qua việc chạy chương trình",
+            "D. Kiểm tra xem sản phẩm có đáp ứng nhu cầu người dùng"
+        ],
+        "answer": "A. Tìm những phần mà chương trình không tuân theo đặc tả"
+    },
+    {
+        "question": "Mục đích của kiểm thử gây áp lực?",
+        "options": [
+            "A. Nhanh chóng xác định lỗi thiết kế làm giảm chi phí phần mềm",
+            "B. Tìm hiểu đặc trưng của hệ thống khi đạt và vượt giới hạn chịu tải",
+            "C. Sớm có sản phẩm hệ thống thi hành trong quá trình phần mềm",
+            "D. Tiến hành sớm việc thẩm định hệ thống trong quá trình kiểm thử"
+        ],
+        "answer": "B. Tìm hiểu đặc trưng của hệ thống khi đạt và vượt giới hạn chịu tải"
+    },
+    {
+        "question": "Trong thiết kế phần mềm, thiết kế dữ liệu là gì?",
+        "options": [
+            "A. Thiết kế chi tiết và đặc tả các cấu trúc dữ liệu được dùng trong việc thực hiện hệ thống",
+            "B. Quá trình dịch các yêu cầu thành các kiến trúc dữ liệu và kiến trúc phần mềm",
+            "C. Các dữ liệu được dùng cho các dịch vụ được thiết kế chi tiết và được đặc tả",
+            "D. Chuyển các mô hình dữ liệu thành các cấu trúc dữ liệu cần thiết cho việc cài đặt phần mềm"
+        ],
+        "answer": "A. Thiết kế chi tiết và đặc tả các cấu trúc dữ liệu được dùng trong việc thực hiện hệ thống"
+    },
+    {
+        "question": "Kỹ nghệ hệ thống, phân tích, thiết kế, mã hóa, kiểm thử, bảo trì. Đây là các pha của mô hình kỹ nghệ phần mềm nào?",
+        "options": [
+            "A. Mô hình xoắn ốc",
+            "B. Mô hình thác nước",
+            "C. Mô hình kỹ thuật thế hệ thứ tư",
+            "D. Mô hình làm bản mẫu"
+        ],
+        "answer": "B. Mô hình thác nước"
+    },
+    {
+        "question": "Mô hình kỹ nghệ phần mềm nào có thêm pha 'phân tích rủi ro'?",
+        "options": [
+            "A. Mô hình thác nước",
+            "B. Mô hình kỹ thuật thế hệ thứ tư",
+            "C. Mô hình làm bản mẫu",
+            "D. Mô hình xoắn ốc"
+        ],
+        "answer": "D. Mô hình xoắn ốc"
+    },
+    {
+        "question": "Những yếu tố chính trong kỹ nghệ phần mềm?",
+        "options": [
+            "A. Phương pháp, công cụ, thủ tục",
+            "B. Xác định, phát triển, bảo trì",
+            "C. Đặc tả yêu cầu, lập trình, vận hành",
+            "D. Đặc tả yêu cầu, thiết kế, lập trình"
+        ],
+        "answer": "A. Phương pháp, công cụ, thủ tục"
+    },
+    {
+        "question": "Ưu điểm chiến lược kiểm thử trên xuống?",
+        "options": [
+            "A. Phát hiện sớm các lỗi thiết kế",
+            "B. Phát hiện sớm các lỗi chương trình",
+            "C. Nhanh chóng đáp ứng yêu cầu người dùng",
+            "D. Có thể kiểm soát được các mức tiến hóa"
+        ],
+        "answer": "A. Phát hiện sớm các lỗi thiết kế"
+    },
+    {
+        "question": "Trong thiết kế phần mềm, thiết kế kiến trúc là gì?",
+        "options": [
+            "A. Thiết kế chi tiết và đặc tả các cấu trúc dữ liệu được dùng trong việc thực hiện hệ thống",
+            "B. Các giao diện của hệ con với các hệ con khác được thiết kế và ghi thành tài liệu",
+            "C. Các thuật toán được dùng cho các dịch vụ được thiết kế chi tiết và được đặc tả",
+            "D. Xác định hệ tổng thể phần mềm bao gồm các hệ con và các quan hệ giữa chúng"
+        ],
+        "answer": "D. Xác định hệ tổng thể phần mềm bao gồm các hệ con và các quan hệ giữa chúng"
+    },
+    {
+        "question": "Chỉ ra đặc trưng của ngôn ngữ lập trình?",
+        "options": [
+            "A. Hoạt động hiệu quả trên mọi hệ điều hành",
+            "B. Dễ sử dụng đối với người lập trình",
+            "C. Dễ dịch thiết kế sang chương trình",
+            "D. Miêu tả đầy đủ, rõ ràng các tiến trình"
+        ],
+        "answer": "D. Miêu tả đầy đủ, rõ ràng các tiến trình"
+    },
+    {
+        "question": "Trong phong cách lập trình, hãy chỉ ra cách đơn giản hóa các câu lệnh chương trình gốc?",
+        "options": [
+            "A. Lồng nhau nhiều giữa các điều kiện hay chu trình",
+            "B. Tránh dùng các phép kiểm tra điều kiện phức tạp",
+            "C. Nên dùng các phép kiểm tra điều kiện phủ định",
+            "D. Không cần dùng các tính năng chuẩn ngôn ngữ"
+        ],
+        "answer": "B. Tránh dùng các phép kiểm tra điều kiện phức tạp"
+    },
+    {
+        "question": "Thứ tự năm giai đoạn của quá trình kiểm thử?",
+        "options": [
+            "A. Kiểm thử đơn vị, kiểm thử mô đun, kiểm thử hệ con, kiểm thử hệ thống, kiểm thử chấp nhận",
+            "B. Kiểm thử hệ con, kiểm thử mô đun, kiểm thử đơn vị, kiểm thử chấp nhận, kiểm thử hệ thống",
+            "C. Kiểm thử mô đun, kiểm thử đơn vị, kiểm thử chấp nhận, kiểm thử hệ con, kiểm thử hệ thống",
+            "D. Kiểm thử chấp nhận, kiểm thử hệ thống, kiểm thử hệ con, kiểm thử mô đun, kiểm thử đơn vị"
+        ],
+        "answer": "A. Kiểm thử đơn vị, kiểm thử mô đun, kiểm thử hệ con, kiểm thử hệ thống, kiểm thử chấp nhận"
+    },
+    {
+        "question": "Chỉ ra phát biểu đúng nhất về lập trình phòng thủ?",
+        "options": [
+            "A. Lập trình phòng thủ là cách lập trình ngăn chặn sự xâm nhập của các file lạ, bảo toàn dữ liệu khi hệ thống sụp đổ",
+            "B. Lập trình phòng thủ là cách lập trình đảm bảo hệ thống không bị ảnh hưởng khi có thành phần sinh lỗi",
+            "C. Lập trình phòng thủ là cách lập trình đánh dấu lại các bất thường trong quá trình vận hành phần mềm",
+            "D. Lập trình phòng thủ là lập trình để có thể tự động sửa chữa các lỗi có thể xảy ra"
+        ],
+        "answer": "D. Lập trình phòng thủ là lập trình để có thể tự động sửa chữa các lỗi có thể xảy ra"
+    },
+    {
+        "question": "Thứ tự bốn hoạt động trong lập trình thứ lỗi?",
+        "options": [
+            "A. Phát hiện lỗi, sửa lỗi, hồi phục sau khi gặp lỗi, định ra mức độ thiệt hại",
+            "B. Phát hiện lỗi, ngăn chặn lỗi, sửa lỗi, hồi phục sau khi gặp lỗi",
+            "C. Phát hiện lỗi, sửa lỗi, định ra mức độ thiệt hại, làm báo cáo chi phí",
+            "D. Phát hiện lỗi, định ra mức độ thiệt hại, hồi phục sau khi gặp lỗi, chữa lỗi"
+        ],
+        "answer": "D. Phát hiện lỗi, định ra mức độ thiệt hại, hồi phục sau khi gặp lỗi, chữa lỗi"
+    },
+    {
+        "question": "Để tăng tính hiệu quả chương trình có thể áp dụng hướng dẫn nào sau đây?",
+        "options": [
+            "A. Dùng mảng nhiều chiều, con trỏ và phép toán số học nhanh",
+            "B. Sử dụng những chu kỳ lồng nhau và trộn lẫn kiểu dữ liệu",
+            "C. Tránh dùng mảng nhiều chiều, con trỏ và danh sách phức tạp",
+            "D. Sử dụng những chu kỳ lồng nhau và danh sách phức tạp"
+        ],
+        "answer": "C. Tránh dùng mảng nhiều chiều, con trỏ và danh sách phức tạp"
+    },
+    {
+        "question": "Nhược điểm của mô hình kiến trúc khách-phục vụ?",
+        "options": [
+            "A. Khi một hệ con thay đổi ảnh hưởng đến hệ con khác",
+            "B. Chia sẻ, trao đổi dữ liệu là không hiệu quả",
+            "C. Tiến hóa dữ liệu là khó khăn và đắt đỏ",
+            "D. Dư thừa server, khó tìm server hay dịch vụ rỗi"
+        ],
+        "answer": "D. Dư thừa server, khó tìm server hay dịch vụ rỗi"
+    },
+    {
+        "question": "Trong lập trình hướng hiệu quả, để tăng hiệu quả vào/ra có thể áp dụng hướng dẫn nào sau đây?",
+        "options": [
+            "A. Số các yêu cầu vào/ra nên giữ mức tối thiểu",
+            "B. Mọi việc vào/ra không nên qua bộ đệm",
+            "C. Với bộ nhớ phụ dùng phương pháp thâm nhập nhanh nhất",
+            "D. Không xếp khối vào/ra với thiết bị bộ nhớ phụ"
+        ],
+        "answer": "A. Số các yêu cầu vào/ra nên giữ mức tối thiểu"
+    },
+    {
+        "question": "Giai đoạn kiểm thử nào liên quan tới việc tìm các lỗi là kết quả từ các tương tác bất ngờ giữa các hệ con và các thành phần hệ thống?",
+        "options": [
+            "A. Kiểm thử hệ con",
+            "B. Kiểm thử hệ thống",
+            "C. Kiểm thử chấp nhận",
+            "D. Kiểm thử giao diện"
+        ],
+        "answer": "A. Kiểm thử hệ con"
+    },
+    {
+        "question": "Phương pháp kiểm thử nào mà việc thiết kế các kiểm thử thông qua phân tích mã nguồn chương trình?",
+        "options": [
+            "A. Kiểm thử hộp trắng",
+            "B. Kiểm thử hộp đen",
+            "C. Kiểm thử đơn vị",
+            "D. Kiểm thử mô đun"
+        ],
+        "answer": "A. Kiểm thử hộp trắng"
+    },
+    {
+        "question": "Phương pháp kiểm thử nào mà việc thiết kế các kiểm thử thông qua đặc tả hệ thống?",
+        "options": [
+            "A. Kiểm thử hệ con",
+            "B. Kiểm thử hộp trắng",
+            "C. Kiểm thử hệ thống",
+            "D. Kiểm thử hộp đen"
+        ],
+        "answer": "D. Kiểm thử hộp đen"
+    },
+    {
+        "question": "Thứ tự các bước thực hiện trong kỹ thuật phân hoạch tương đương của kiểm thử hộp đen?",
+        "options": [
+            "A. Kết hợp các dữ liệu để tạo ra bộ dữ liệu kiểm thử, chọn dữ liệu đại diện cho mỗi lớp tương đương, xác định các lớp tương đương từ miền dữ liệu vào",
+            "B. Xác định các lớp tương đương từ miền dữ liệu vào, chọn dữ liệu đại diện cho mỗi lớp tương đương, kết hợp các dữ liệu để tạo ra bộ dữ liệu kiểm thử",
+            "C. Chọn dữ liệu đại diện cho mỗi lớp tương đương, kết hợp các dữ liệu để tạo ra bộ dữ liệu kiểm thử, xác định các lớp tương đương từ miền dữ liệu vào",
+            "D. Xác định các lớp tương đương từ miền dữ liệu vào, kết hợp các dữ liệu để tạo ra bộ dữ liệu kiểm thử, chọn dữ liệu đại diện cho mỗi lớp tương đương"
+        ],
+        "answer": "B. Xác định các lớp tương đương từ miền dữ liệu vào, chọn dữ liệu đại diện cho mỗi lớp tương đương, kết hợp các dữ liệu để tạo ra bộ dữ liệu kiểm thử"
+    },
+    {
+        "question": "Trong kỹ thuật phân hoạch tương đương của kiểm thử hộp đen, nếu điều kiện vào xác định một miền giá trị thì phân hoạch kiểm thử thành?",
+        "options": [
+            "A. 1 lớp tương đương",
+            "B. 2 lớp tương đương",
+            "C. 3 lớp tương đương",
+            "D. 4 lớp tương đương"
+        ],
+        "answer": "B. 2 lớp tương đương"
+    },
+    {
+        "question": "Trong kỹ thuật phân hoạch tương đương của kiểm thử hộp đen, nếu điều kiện vào yêu cầu một giá trị xác định thì phân hoạch kiểm thử thành?",
+        "options": [
+            "A. 4 lớp tương đương",
+            "B. 2 lớp tương đương",
+            "C. 3 lớp tương đương",
+            "D. 1 lớp tương đương"
+        ],
+        "answer": "C. 3 lớp tương đương"
+    },
+    {
+        "question": "Trong kỹ thuật phân hoạch tương đương của kiểm thử hộp đen, nếu điều kiện đầu vào xác định một phần tử của tập hợp thì phân hoạch kiểm thử thành?",
+        "options": [
+            "A. 1 lớp tương đương",
+            "B. 2 lớp tương đương",
+            "C. 4 lớp tương đương",
+            "D. 3 lớp tương đương"
+        ],
+        "answer": "B. 2 lớp tương đương"
+    },
+    {
+        "question": "Trong kỹ thuật phân hoạch tương đương của kiểm thử hộp đen, nếu điều kiện đầu vào là một biến hoặc một biểu thức logic thì phân hoạch kiểm thử thành?",
+        "options": [
+            "A. 3 lớp tương đương",
+            "B. 4 lớp tương đương",
+            "C. 2 lớp tương đương",
+            "D. 1 lớp tương đương"
+        ],
+        "answer": "C. 2 lớp tương đương"
+    },
+    {
+        "question": "Trong kỹ thuật phân tích giá trị biên, nếu điều kiện vào xác định một miền được giới hạn bởi các giá trị a và b thì các trường hợp kiểm thử được...?",
+        "options": [
+            "A. Xác định ngay tại a và b đồng thời ngay trên a và ngay dưới b",
+            "B. Xác định ngay tại a và b đồng thời ngay trên và ngay dưới a và b",
+            "C. Xác định ngay tại a và b đồng thời ngay dưới a và ngay trên b",
+            "D. Xác định ngay trên, ngay dưới a, tại b và ngay trên, ngay dưới b"
+        ],
+        "answer": "B. Xác định ngay tại a và b đồng thời ngay trên và ngay dưới a và b"
+    },
+    {
+        "question": "Trong kỹ thuật phân tích giá trị biên, nếu điều kiện vào xác định ngay một số giá trị thì xây dựng trường hợp kiểm thử cho...?",
+        "options": [
+            "A. Giá trị cực đại, cực tiểu, các giá trị ngay trên, ngay dưới giá trị cực đại, cực tiểu",
+            "B. Giá trị cực đại, cực tiểu, các giá trị ngay trên giá trị cực đại và cực tiểu",
+            "C. Giá trị cực đại, cực tiểu, các giá trị ngay trên giá trị cực đại và ngay dưới giá trị cực tiểu",
+            "D. Giá trị cực đại, cực tiểu, các giá trị ngay dưới giá trị cực đại và ngay trên giá trị cực tiểu"
+        ],
+        "answer": "A. Giá trị cực đại, cực tiểu, các giá trị ngay trên, ngay dưới giá trị cực đại, cực tiểu"
+    },
+    {
+        "question": "Trong kỹ thuật phân tích giá trị biên, nếu cấu trúc dữ liệu chương trình bên trong được quy định là các biên thì thiết kế trường hợp kiểm thử?",
+        "options": [
+            "A. Thực thi cấu trúc dữ liệu tại giá trị bất kỳ",
+            "B. Thực thi cấu trúc dữ liệu tại giá trị cực đại",
+            "C. Thực thi cấu trúc dữ liệu tại biên của nó",
+            "D. Thực thi cấu trúc dữ liệu tại giá trị cực tiểu"
+        ],
+        "answer": "C. Thực thi cấu trúc dữ liệu tại biên của nó"
+    },
+    {
+        "question": "Trong kiểm tra phần mềm, hoạt động xác minh là gì?",
+        "options": [
+            "A. Sự kiểm tra xem chương trình có lỗi không và tiến hành sửa lỗi để sản phẩm hoạt động tốt",
+            "B. Sự kiểm tra xem sản phẩm có đúng với đặc tả không, có hoạt động tốt không",
+            "C. Sự kiểm tra xem sản phẩm có đáp ứng được nhu cầu người dùng không",
+            "D. Sự kiểm tra xem sản phẩm có hoạt động tốt không, có đáp ứng yêu cầu người dùng không"
+        ],
+        "answer": "B. Sự kiểm tra xem sản phẩm có đúng với đặc tả không, có hoạt động tốt không"
+    },
+    {
+        "question": "Trong kiểm tra phần mềm, hoạt động thẩm định là gì?",
+        "options": [
+            "A. Sự kiểm tra xem sản phẩm có hoạt động tốt không",
+            "B. Sự kiểm tra xem sản phẩm có đúng với đặc tả không",
+            "C. Sự kiểm tra xem sản phẩm có đáp ứng được nhu cầu người dùng không",
+            "D. Sự kiểm tra xem sản phẩm có lỗi không và đáp ứng yêu cầu người dùng không"
+        ],
+        "answer": "C. Sự kiểm tra xem sản phẩm có đáp ứng được nhu cầu người dùng không"
+    },
+    {
+        "question": "Trong chất lượng thiết kế phần mềm, kết dính logic là gì?",
+        "options": [
+            "A. Các thành phần cùng thực hiện các chức năng tương tự được đặt vào cùng một mô đun",
+            "B. Tất cả các thành phần cùng hoạt hóa một lúc được bó lại với nhau",
+            "C. Các phần tử trong mô đun được ghép lại trong một dãy điều khiển",
+            "D. Tất cả các phần tử của mô đun cùng thao tác trên một dữ liệu vào và đưa cùng một dữ liệu ra"
+        ],
+        "answer": "A. Các thành phần cùng thực hiện các chức năng tương tự được đặt vào cùng một mô đun"
+    },
+    {
+        "question": "Yêu cầu phi chức năng là gì?",
+        "options": [
+            "A. Các yêu cầu về quá trình phát triển phần mềm",
+            "B. Các ràng buộc mà hệ phần mềm phải tuân thủ",
+            "C. Các yêu cầu về sản phẩm phần mềm",
+            "D. Các dịch vụ mà hệ phần mềm phải cung cấp"
+        ],
+        "answer": "B. Các ràng buộc mà hệ phần mềm phải tuân thủ"
+    },
+    {
+        "question": "Mức 'xác định yêu cầu' là gì?",
+        "options": [
+            "A. Mô tả mức chi tiết về yêu cầu",
+            "B. Mô tả yêu cầu chức năng của phần mềm",
+            "C. Mô tả trừu tượng mức cao của yêu cầu",
+            "D. Mô tả yêu cầu phi chức năng của phần mềm"
+        ],
+        "answer": "C. Mô tả trừu tượng mức cao của yêu cầu"
+    },
+    {
+        "question": "Thế nào là bảo trì cấu trúc?",
+        "options": [
+            "A. Bảo trì đáp ứng các thay đổi những chức năng đã có và các mở rộng tổng quát được người dùng gửi đến",
+            "B. Phần mềm có cấu hình duy nhất là mã nguồn, hoạt động bảo trì bắt đầu với việc đánh giá chi tiết mã nguồn",
+            "C. Bảo trì cải thiện các tính năng bảo trì như độ tin cậy, cung cấp nền tảng tốt hơn cho những mở rộng sau này",
+            "D. Phần mềm có cấu hình hoàn thiện, nhiệm vụ bảo trì bắt đầu bằng việc đánh giá các tài liệu thiết kế"
+        ],
+        "answer": "D. Phần mềm có cấu hình hoàn thiện, nhiệm vụ bảo trì bắt đầu bằng việc đánh giá các tài liệu thiết kế"
+    },
+    {
+        "question": "Chỉ ra đặc trưng của ngôn ngữ lập trình?",
+        "options": [
+            "A. Dễ hiểu và dễ sử dụng đối với người lập trình",
+            "B. Miêu tả đầy đủ và rõ ràng các tiến trình",
+            "C. Hoạt động hiệu quả trên mọi hệ điều hành",
+            "D. Trình biên dịch hiệu quả, sẵn công cụ phát triển"
+        ],
+        "answer": "A. Dễ hiểu và dễ sử dụng đối với người lập trình"
+    },
+    {
+        "question": "Đơn yêu cầu bảo trì được cung cấp cho đối tượng nào sử dụng?",
+        "options": [
+            "A. Người sử dụng phần mềm",
+            "B. Người bảo trì phần mềm",
+            "C. Người thiết kế phần mềm",
+            "D. Người lập trình phần mềm"
+        ],
+        "answer": "A. Người sử dụng phần mềm"
+    },
+    {
+        "question": "Trong chất lượng thiết kế phần mềm, kết dính thủ tục là gì?",
+        "options": [
+            "A. Tất cả các thành phần cùng hoạt hóa một lúc được bó lại với nhau",
+            "B. Trong một mô đun, ra của phần tử này là đầu vào của phần tử khác",
+            "C. Các công việc không liên quan với nhau, song lại bị bó vào một mô đun",
+            "D. Các phần tử trong mô đun được ghép lại trong một dãy điều khiển"
+        ],
+        "answer": "D. Các phần tử trong mô đun được ghép lại trong một dãy điều khiển"
+    },
+    {
+        "question": "Tất cả các phần tử của mô đun cùng thao tác trên một dữ liệu vào và đưa cùng một dữ liệu ra thuộc loại kết dính nào trong chất lượng thiết kế phần mềm?",
+        "options": [
+            "A. Kết dính tuần tự",
+            "B. Kết dính thời điểm",
+            "C. Kết dính truyền thông",
+            "D. Kết dính chức năng"
+        ],
+        "answer": "C. Kết dính truyền thông"
+    },
+    {
+        "question": "Mô hình tiến trình tổng quát thiết kế được thực hiện theo thứ tự?",
+        "options": [
+            "A. Phác thảo thiết kế phi hình thức, thiết kế phi hình thức, thiết kế hình thức hơn, thiết kế chi tiết cuối cùng",
+            "B. Phác thảo thiết kế phi hình thức, thiết kế phi hình thức, thiết kế chi tiết cuối cùng, thiết kế hình thức hơn",
+            "C. Thiết kế chi tiết cuối cùng, thiết kế phi hình thức, phác thảo thiết kế phi hình thức, thiết kế hình thức hơn",
+            "D. Thiết kế hình thức hơn, phác thảo thiết kế phi hình thức, thiết kế phi hình thức, thiết kế chi tiết cuối cùng"
+        ],
+        "answer": "A. Phác thảo thiết kế phi hình thức, thiết kế phi hình thức, thiết kế hình thức hơn, thiết kế chi tiết cuối cùng"
+    },
+    {
+        "question": "Đáp ứng các yêu cầu về những khả năng mới, các thay đổi những chức năng đã có và các mở rộng tổng quát được người dùng gửi đến… thuộc hoạt động bảo trì gì?",
+        "options": [
+            "A. Bảo trì hoàn thiện",
+            "B. Bảo trì phòng ngừa",
+            "C. Bảo trì tiếp hợp",
+            "D. Bảo trì hiệu chỉnh"
+        ],
+        "answer": "A. Bảo trì hoàn thiện"
+    },
+    {
+        "question": "Đưa ra các cách làm về mặt kỹ thuật để xây dựng phần mềm thuộc yếu tố nào trong kỹ nghệ phần mềm?",
+        "options": [
+            "A. Công cụ",
+            "B. Phương pháp",
+            "C. Thủ tục",
+            "D. Kỹ thuật"
+        ],
+        "answer": "B. Phương pháp"
+    },
+    {
+        "question": "Hoạt động bảo trì tiếp hợp là gì?",
+        "options": [
+            "A. Các thay đổi những chức năng đã có và các mở rộng tổng quát được người dùng gửi đến",
+            "B. Quá trình phân tích và hiệu chỉnh một hay nhiều lỗi của chương trình",
+            "C. Cải thiện tính năng bảo trì hay độ tin cậy, cung cấp nền tảng tốt hơn cho những mở rộng sau này",
+            "D. Các hoạt động sửa đổi phần mềm để thích ứng được những thay đổi của môi trường"
+        ],
+        "answer": "D. Các hoạt động sửa đổi phần mềm để thích ứng được những thay đổi của môi trường"
+    },
+    {
+        "question": "Trong lập trình hướng hiệu quả, để tăng hiệu quả vào/ra có thể áp dụng hướng dẫn nào sau đây?",
+        "options": [
+            "A. Mọi việc vào/ra không nên qua bộ đệm",
+            "B. Không xếp khối vào/ra với thiết bị bộ nhớ phụ",
+            "C. Với bộ nhớ phụ dùng phương pháp thâm nhập nhanh nhất",
+            "D. Số các yêu cầu vào/ra nên giữ mức tối thiểu"
+        ],
+        "answer": "D. Số các yêu cầu vào/ra nên giữ mức tối thiểu"
+    },
+    {
+        "question": "Loại kiểm thử nào được tiến hành bởi một nhóm nhỏ người sử dụng dưới sự hướng dẫn của người phát triển, thẩm định tính dùng được của hệ thống?",
+        "options": [
+            "A. Kiểm thử thống kê",
+            "B. Kiểm thử khiếm khuyết",
+            "C. Kiểm thử alpha",
+            "D. Kiểm thử beta"
+        ],
+        "answer": "C. Kiểm thử alpha"
+    },
+    {
+        "question": "Tiêu chuẩn 'tính hiệu quả' trong đánh giá phần mềm là gì?",
+        "options": [
+            "A. Phần mềm có giao diện người dùng thích hợp, có tư liệu hướng dẫn và các tiện ích trợ giúp đầy đủ",
+            "B. Phần mềm có thể dễ dàng sửa chữa và nâng cấp được",
+            "C. Phần mềm không gây nên các thiệt hại vật lý và kinh tế khi hệ thống thất bại",
+            "D. Phần mềm không được lãng phí các tài nguyên của hệ thống"
+        ],
+        "answer": "D. Phần mềm không được lãng phí các tài nguyên của hệ thống"
+    }
+        ];
+
+        // DOM elements
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackElement = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentQuestionDisplay = document.getElementById('current-question');
+        const questionNumberDisplay = document.getElementById('question-number');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const scoreDisplay = document.getElementById('score');
+        const timeDisplay = document.getElementById('time');
+        const shuffleQuestionsBtn = document.getElementById('shuffle-questions');
+        const shuffleAnswersBtn = document.getElementById('shuffle-answers');
+        const toggleAutoNextBtn = document.getElementById('toggle-auto-next');
+        const autoNextStatus = document.getElementById('auto-next-status');
+        const resultsContainer = document.getElementById('results-container');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const finalCorrectDisplay = document.getElementById('final-correct');
+        const finalTotalDisplay = document.getElementById('final-total');
+        const finalPercentageDisplay = document.getElementById('final-percentage');
+        const finalTimeDisplay = document.getElementById('final-time');
+        const finalProgressBar = document.getElementById('final-progress-bar');
+        const restartBtn = document.getElementById('restart-btn');
+        const autoNextTimer = document.getElementById('auto-next-timer');
+        const countdownDisplay = document.getElementById('countdown');
+        const autoNextProgressBar = document.getElementById('auto-next-progress-bar');
+        const reviewIncorrectBtn = document.getElementById('review-incorrect');
+        const reviewIncorrectFinalBtn = document.getElementById('review-incorrect-final');
+        const questionNav = document.getElementById('question-nav');
+        const answeredCount = document.getElementById('answered-count');
+        const correctCount = document.getElementById('correct-count');
+        const incorrectCount = document.getElementById('incorrect-count');
+        const unansweredCount = document.getElementById('unanswered-count');
+        const sidebarProgressBar = document.getElementById('sidebar-progress-bar');
+        const jumpToFirstBtn = document.getElementById('jump-to-first');
+        const jumpToLastBtn = document.getElementById('jump-to-last');
+
+        // Quiz state
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let userResults = []; // Lưu trữ kết quả (đúng/sai) cho mỗi câu hỏi
+        let time = 0;
+        let timerInterval;
+        let autoNextInterval;
+        let countdownTimer;
+        let shuffledQuestions = [...quizData];
+        let shuffleAnswersFlag = false;
+        let autoNextEnabled = true; // Mặc định bật tự động chuyển câu
+        let reviewIncorrectMode = false;
+        let incorrectQuestions = [];
+
+        // Initialize the quiz
+        function initQuiz() {
+            totalQuestionsDisplay.textContent = quizData.length;
+            userAnswers = new Array(quizData.length).fill(null);
+            userResults = new Array(quizData.length).fill(null);
+            shuffledQuestions = [...quizData];
+            loadQuestion();
+            startTimer();
+            updateAutoNextButton();
+            updateQuestionNav();
+            updateStats();
+        }
+
+        // Load a question
+        function loadQuestion() {
+            // Clear any existing auto-next timers
+            clearAutoNextTimer();
+            
+            const question = shuffledQuestions[currentQuestionIndex];
+            questionText.textContent = question.question;
+            questionNumberDisplay.textContent = currentQuestionIndex + 1;
+            
+            optionsContainer.innerHTML = '';
+            
+            let options = [...question.options];
+            if (shuffleAnswersFlag) {
+                options = shuffleArray(options);
+            }
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                
+                optionElement.innerHTML = `
+                    <div class="option-prefix">${option.split('.')[0]}.</div>
+                    <div class="option-text">${option.split('.').slice(1).join('.').trim()}</div>
+                    <div class="correct-badge"><i class="fas fa-check"></i></div>
+                `;
+                
+                // Check if this option was previously selected
+                if (userAnswers[currentQuestionIndex] === option) {
+                    optionElement.classList.add('selected');
+                }
+                
+                optionElement.addEventListener('click', () => selectOption(optionElement, option));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update navigation buttons
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.textContent = currentQuestionIndex === shuffledQuestions.length - 1 ? 'Kết thúc' : 'Câu tiếp theo';
+            
+            // Update progress
+            currentQuestionDisplay.textContent = currentQuestionIndex + 1;
+            totalQuestionsDisplay.textContent = shuffledQuestions.length;
+            
+            // Hide feedback for new question
+            feedbackElement.style.display = 'none';
+            feedbackElement.className = 'feedback';
+            autoNextTimer.style.display = 'none';
+            
+            // Update question navigation highlights
+            updateQuestionNav();
+        }
+
+        // Select an option
+        function selectOption(optionElement, option) {
+            // If already answered this question, don't allow changing
+            if (userAnswers[currentQuestionIndex] !== null && !reviewIncorrectMode) return;
+            
+            // Remove selected class from all options
+            document.querySelectorAll('.option').forEach(el => {
+                el.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Add selected class to clicked option
+            optionElement.classList.add('selected');
+            
+            // Store the user's answer
+            userAnswers[currentQuestionIndex] = option;
+            
+            // Check if the answer is correct
+            const question = shuffledQuestions[currentQuestionIndex];
+            const isCorrect = option === question.answer;
+            
+            // Store the result
+            userResults[currentQuestionIndex] = isCorrect;
+            
+            // Show feedback
+            feedbackElement.textContent = isCorrect 
+                ? 'Chính xác! Câu trả lời của bạn đúng.' 
+                : `Sai rồi. Câu trả lời đúng là: ${question.answer}`;
+            feedbackElement.classList.add(isCorrect ? 'correct-feedback' : 'incorrect-feedback');
+            feedbackElement.style.display = 'block';
+            
+            // Update score if this is the first time answering this question
+            if (isCorrect && !reviewIncorrectMode) {
+                score++;
+                scoreDisplay.textContent = score;
+            }
+            
+            // Highlight correct answer
+            document.querySelectorAll('.option').forEach(el => {
+                const optionText = el.querySelector('.option-text').textContent;
+                const fullOption = el.querySelector('.option-prefix').textContent.replace('.', '') + '. ' + optionText;
+                
+                if (fullOption === question.answer) {
+                    el.classList.add('correct');
+                }
+                if (fullOption === option && !isCorrect) {
+                    el.classList.add('incorrect');
+                }
+            });
+            
+            // Update stats and navigation
+            updateStats();
+            updateQuestionNav();
+            
+            // Start auto-next timer if enabled
+            if (autoNextEnabled && currentQuestionIndex < shuffledQuestions.length - 1) {
+                startAutoNextTimer();
+            }
+        }
+
+        // Start auto-next timer
+        function startAutoNextTimer() {
+            autoNextTimer.style.display = 'block';
+            let seconds = 3;
+            countdownDisplay.textContent = seconds;
+            autoNextProgressBar.style.width = '100%';
+            
+            // Update countdown every second
+            countdownTimer = setInterval(() => {
+                seconds--;
+                countdownDisplay.textContent = seconds;
+                autoNextProgressBar.style.width = `${(seconds / 3) * 100}%`;
+                
+                if (seconds <= 0) {
+                    clearInterval(countdownTimer);
+                    goToNextQuestion();
+                }
+            }, 1000);
+        }
+
+        // Clear auto-next timer
+        function clearAutoNextTimer() {
+            clearInterval(countdownTimer);
+            autoNextTimer.style.display = 'none';
+        }
+
+        // Navigation functions
+        function goToNextQuestion() {
+            clearAutoNextTimer();
+            
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                if (reviewIncorrectMode) {
+                    exitReviewMode();
+                } else {
+                    finishQuiz();
+                }
+            }
+        }
+
+        function goToPrevQuestion() {
+            clearAutoNextTimer();
+            
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function jumpToQuestion(index) {
+            clearAutoNextTimer();
+            currentQuestionIndex = index;
+            loadQuestion();
+        }
+
+        // Timer functions
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                time++;
+                const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+                const seconds = (time % 60).toString().padStart(2, '0');
+                timeDisplay.textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        // Shuffle functions
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function shuffleQuestions() {
+            const currentQuestionId = shuffledQuestions[currentQuestionIndex].question;
+            shuffledQuestions = shuffleArray([...quizData]);
+            
+            // Find the index of the current question in the shuffled array
+            currentQuestionIndex = shuffledQuestions.findIndex(q => q.question === currentQuestionId);
+            if (currentQuestionIndex === -1) currentQuestionIndex = 0;
+            
+            loadQuestion();
+            updateQuestionNav();
+        }
+
+        function toggleShuffleAnswers() {
+            shuffleAnswersFlag = !shuffleAnswersFlag;
+            shuffleAnswersBtn.innerHTML = shuffleAnswersFlag 
+                ? '<i class="fas fa-random"></i> Bỏ xáo trộn đáp án' 
+                : '<i class="fas fa-random"></i> Xáo trộn đáp án';
+            loadQuestion();
+        }
+
+        // Toggle auto-next feature
+        function toggleAutoNext() {
+            autoNextEnabled = !autoNextEnabled;
+            updateAutoNextButton();
+            
+            // If turning off auto-next while timer is running, clear it
+            if (!autoNextEnabled) {
+                clearAutoNextTimer();
+            }
+        }
+
+        function updateAutoNextButton() {
+            if (autoNextEnabled) {
+                autoNextStatus.textContent = 'Bật';
+                toggleAutoNextBtn.innerHTML = '<i class="fas fa-forward"></i> Tự động chuyển câu: <span id="auto-next-status">Bật</span>';
+            } else {
+                autoNextStatus.textContent = 'Tắt';
+                toggleAutoNextBtn.innerHTML = '<i class="fas fa-forward"></i> Tự động chuyển câu: <span id="auto-next-status">Tắt</span>';
+            }
+        }
+
+        // Review incorrect answers
+        function reviewIncorrect() {
+            // Find all incorrect answers
+            incorrectQuestions = [];
+            for (let i = 0; i < userResults.length; i++) {
+                if (userResults[i] === false) {
+                    incorrectQuestions.push(i);
+                }
+            }
+            
+            if (incorrectQuestions.length === 0) {
+                alert('Bạn không có câu nào trả lời sai!');
+                return;
+            }
+            
+            // Enter review mode
+            reviewIncorrectMode = true;
+            shuffledQuestions = incorrectQuestions.map(index => quizData[index]);
+            currentQuestionIndex = 0;
+            
+            // Update UI for review mode
+            document.querySelectorAll('.controls .btn').forEach(btn => {
+                btn.disabled = true;
+            });
+            reviewIncorrectBtn.disabled = false;
+            reviewIncorrectBtn.innerHTML = '<i class="fas fa-times"></i> Thoát chế độ làm lại';
+            
+            loadQuestion();
+        }
+
+        function exitReviewMode() {
+            reviewIncorrectMode = false;
+            shuffledQuestions = [...quizData];
+            currentQuestionIndex = incorrectQuestions[0] || 0;
+            
+            // Restore normal UI
+            document.querySelectorAll('.controls .btn').forEach(btn => {
+                btn.disabled = false;
+            });
+            reviewIncorrectBtn.innerHTML = '<i class="fas fa-redo"></i> Làm lại câu sai';
+            
+            loadQuestion();
+        }
+
+        // Update question navigation
+        function updateQuestionNav() {
+            questionNav.innerHTML = '';
+            
+            const questionsToShow = reviewIncorrectMode ? incorrectQuestions : [...Array(quizData.length).keys()];
+            
+            questionsToShow.forEach((qIndex, navIndex) => {
+                const questionItem = document.createElement('div');
+                questionItem.classList.add('question-nav-item');
+                questionItem.textContent = navIndex + 1;
+                
+                // Highlight current question
+                if ((reviewIncorrectMode && currentQuestionIndex === navIndex) || 
+                    (!reviewIncorrectMode && currentQuestionIndex === qIndex)) {
+                    questionItem.classList.add('current');
+                }
+                
+                // Mark answered questions
+                if (userAnswers[qIndex] !== null) {
+                    questionItem.classList.add('answered');
+                    if (userResults[qIndex] === false) {
+                        questionItem.classList.add('incorrect');
+                    }
+                }
+                
+                questionItem.addEventListener('click', () => {
+                    if (reviewIncorrectMode) {
+                        currentQuestionIndex = navIndex;
+                    } else {
+                        currentQuestionIndex = qIndex;
+                    }
+                    loadQuestion();
+                });
+                
+                questionNav.appendChild(questionItem);
+            });
+            
+            // Update answered count
+            const answered = userAnswers.filter(a => a !== null).length;
+            answeredCount.textContent = `${answered}/${quizData.length}`;
+        }
+
+        // Update statistics
+        function updateStats() {
+            const correct = userResults.filter(r => r === true).length;
+            const incorrect = userResults.filter(r => r === false).length;
+            const unanswered = userResults.filter(r => r === null).length;
+            
+            correctCount.textContent = correct;
+            incorrectCount.textContent = incorrect;
+            unansweredCount.textContent = unanswered;
+            
+            const percentage = Math.round((correct / quizData.length) * 100);
+            sidebarProgressBar.style.width = `${percentage}%`;
+        }
+
+        // Finish quiz
+        function finishQuiz() {
+            stopTimer();
+            clearAutoNextTimer();
+            document.getElementById('quiz-container').style.display = 'none';
+            
+            const correct = userResults.filter(r => r === true).length;
+            const percentage = Math.round((correct / quizData.length) * 100);
+            
+            finalScoreDisplay.textContent = correct;
+            finalCorrectDisplay.textContent = correct;
+            finalTotalDisplay.textContent = quizData.length;
+            finalPercentageDisplay.textContent = `${percentage}%`;
+            finalTimeDisplay.textContent = timeDisplay.textContent;
+            finalProgressBar.style.width = `${percentage}%`;
+            
+            resultsContainer.style.display = 'block';
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            time = 0;
+            userAnswers = new Array(quizData.length).fill(null);
+            userResults = new Array(quizData.length).fill(null);
+            shuffledQuestions = [...quizData];
+            reviewIncorrectMode = false;
+            
+            document.getElementById('quiz-container').style.display = 'block';
+            resultsContainer.style.display = 'none';
+            
+            scoreDisplay.textContent = '0';
+            timeDisplay.textContent = '00:00';
+            
+            stopTimer();
+            startTimer();
+            loadQuestion();
+            updateQuestionNav();
+            updateStats();
+            
+            // Reset control buttons
+            document.querySelectorAll('.controls .btn').forEach(btn => {
+                btn.disabled = false;
+            });
+            reviewIncorrectBtn.innerHTML = '<i class="fas fa-redo"></i> Làm lại câu sai';
+        }
+
+        // Event listeners
+        nextBtn.addEventListener('click', goToNextQuestion);
+        prevBtn.addEventListener('click', goToPrevQuestion);
+        shuffleQuestionsBtn.addEventListener('click', shuffleQuestions);
+        shuffleAnswersBtn.addEventListener('click', toggleShuffleAnswers);
+        toggleAutoNextBtn.addEventListener('click', toggleAutoNext);
+        restartBtn.addEventListener('click', restartQuiz);
+        reviewIncorrectBtn.addEventListener('click', () => {
+            if (reviewIncorrectMode) {
+                exitReviewMode();
+            } else {
+                reviewIncorrect();
+            }
+        });
+        reviewIncorrectFinalBtn.addEventListener('click', reviewIncorrect);
+        jumpToFirstBtn.addEventListener('click', () => jumpToQuestion(0));
+        jumpToLastBtn.addEventListener('click', () => jumpToQuestion(shuffledQuestions.length - 1));
+
+        // Start the quiz
+        initQuiz();
+    </script>
+</body>
+</html>
